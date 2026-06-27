@@ -68,7 +68,7 @@ export default function AddBrandToCategory({
                   key={brand.id}
                   className={`flex items-center gap-3 rounded-xl p-2 transition-colors
                     ${isSelected ? "bg-[#f7f5f2]" : ""}
-                    ${isAlready ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
+                     ${isAlready ? "opacity-40 cursor-default" : "cursor-pointer"}`}
                 >
                   <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
                     {brand.thumbnailUrl ? (
