@@ -13,13 +13,12 @@ export default function AddBrandToCategory({
   categoryName,
   onClose,
 }: AddBrandToCategoryProps) {
-  const { brands, savedBrands, categories, addBrandToCategory } = useSwatch();
+  const { brands, savedBrands, categories, addBrandToCategory, saveBrand } = useSwatch();
   const [selected, setSelected] = useState<string[]>([]);
 
-  const savedBrandIds = savedBrands.map((s) => s.brandId);
-  const availableBrands = brands.filter((b) => savedBrandIds.includes(b.id));
   const currentCat = categories.find((c) => c.id === categoryId);
   const alreadyInCategory = currentCat?.brandIds ?? [];
+  const availableBrands = brands;
 
   const toggle = (id: string) => {
     setSelected((prev) =>
@@ -27,9 +26,19 @@ export default function AddBrandToCategory({
     );
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (selected.length === 0) return;
-    addBrandToCategory(categoryId, selected);
+    const savedBrandIds = savedBrands.map((s) => s.brandId);
+    // 아직 저장 안 된 브랜드는 먼저 저장
+    const unsaved = selected.filter((id) => !savedBrandIds.includes(id));
+    for (const id of unsaved) {
+      await saveBrand(id, [categoryId]);
+    }
+    // 이미 저장된 브랜드는 카테고리에 추가
+    const alreadySaved = selected.filter((id) => savedBrandIds.includes(id));
+    if (alreadySaved.length > 0) {
+      await addBrandToCategory(categoryId, alreadySaved);
+    }
     toast("브랜드가 내 스와치에 추가되었습니다.");
     onClose();
   };
@@ -45,7 +54,7 @@ export default function AddBrandToCategory({
           <span className="text-[#1a1a1a] font-medium">"{categoryName}"</span> 카테고리에 추가합니다
         </p>
 
-        <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col gap-2 mb-5">
+        <div className="flex-1 overflow-y-auto flex flex-col gap-2 mb-5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {availableBrands.length === 0 ? (
             <p className="text-sm text-[#bbb] text-center py-8">
               저장된 브랜드가 없어요
