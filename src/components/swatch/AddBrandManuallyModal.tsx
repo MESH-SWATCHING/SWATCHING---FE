@@ -45,17 +45,34 @@ export default function AddBrandManuallyModal({
     setImagePreview(null);
   };
 
-  const handleSubmit = () => {
-    if (!name.trim()) return;
-    addManualBrand({
-      name: name.trim(),
-      instagramUrl: url.includes("instagram") ? url : undefined,
-      websiteUrl: !url.includes("instagram") ? url : undefined,
-      categoryIds: selectedCats,
-      image: image ?? undefined,
-    });
-    toast("브랜드가 내 스와치에 추가되었습니다.");
-    onClose();
+  const normalizeUrl = (raw: string): string | undefined => {
+    const trimmed = raw.trim();
+    if (!trimmed) return undefined;
+    if (!/^https?:\/\//i.test(trimmed)) return `https://${trimmed}`;
+    return trimmed;
+  };
+
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!name.trim() || submitting) return;
+    const normalizedUrl = normalizeUrl(url);
+    setSubmitting(true);
+    try {
+      await addManualBrand({
+        name: name.trim(),
+        instagramUrl: normalizedUrl?.includes("instagram") ? normalizedUrl : undefined,
+        websiteUrl: normalizedUrl && !normalizedUrl.includes("instagram") ? normalizedUrl : undefined,
+        categoryIds: selectedCats,
+        image: image ?? undefined,
+      });
+      toast("브랜드가 내 스와치에 추가되었습니다.");
+      onClose();
+    } catch (e) {
+      toast.error("브랜드 추가에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const isValid = name.trim().length > 0;
@@ -174,11 +191,11 @@ export default function AddBrandManuallyModal({
 
         <button
           onClick={handleSubmit}
-          disabled={!isValid}
+          disabled={!isValid || submitting}
           className={`w-full py-4 rounded-2xl text-sm font-semibold transition-colors
-            ${isValid ? "bg-[#1a1a1a] text-white" : "bg-[#e0ddd8] text-[#aaa]"}`}
+            ${isValid && !submitting ? "bg-[#1a1a1a] text-white" : "bg-[#e0ddd8] text-[#aaa]"}`}
         >
-          내 스와치에 추가
+          {submitting ? "추가 중..." : "내 스와치에 추가"}
         </button>
       </div>
     </div>

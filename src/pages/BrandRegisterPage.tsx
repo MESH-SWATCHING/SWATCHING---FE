@@ -1,7 +1,8 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Upload, X } from "lucide-react";
-import { MOODS } from "../constants/Moods";
+import { MOODS, MOOD_TO_EN, Mood } from "../constants/Moods";
+import { submitBrand } from "../api/swatching";
 
 interface FormState {
   name: string;
@@ -30,7 +31,7 @@ export default function BrandRegisterPage() {
     phone: "",
   });
 
-  const [, setThumbnail] = useState<File | null>(null);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [visuals, setVisuals] = useState<File[]>([]);
   const [visualPreviews, setVisualPreviews] = useState<string[]>([]);
@@ -92,15 +93,29 @@ export default function BrandRegisterPage() {
     form.email &&
     form.phone;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isValid) return;
-    // TODO: API 연동
-    // const formData = new FormData()
-    // formData.append("name", form.name)
-    // if (thumbnail) formData.append("thumbnail", thumbnail)
-    // visuals.forEach((v) => formData.append("visuals", v))
-    alert("등록 신청이 완료되었습니다.");
-    navigate("/myswatch");
+    try {
+      await submitBrand(
+        {
+          name: form.name,
+          summary: form.shortDesc,
+          story: form.story,
+          instagramUrl: form.instagramUrl,
+          websiteUrl: form.websiteUrl,
+          keywords: form.keywords.map((kw) => MOOD_TO_EN[kw as Mood] ?? kw),
+          managerName: form.managerName,
+          email: form.email,
+          phone: form.phone,
+        },
+        thumbnail,
+        visuals
+      );
+      alert("등록 신청이 완료되었습니다.");
+      navigate("/myswatch");
+    } catch {
+      alert("등록 신청에 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (

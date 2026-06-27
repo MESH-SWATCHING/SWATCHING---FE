@@ -47,11 +47,16 @@ export default function MySwatchPage() {
     setShowNewCatInput(false);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (!deletingCatId) return;
-    deleteCategory(deletingCatId);
-    setActiveCatId("all");
-    setDeletingCatId(null);
+    try {
+      await deleteCategory(deletingCatId);
+      setActiveCatId("all");
+    } catch {
+      toast.error("카테고리 삭제에 실패했습니다.");
+    } finally {
+      setDeletingCatId(null);
+    }
   };
 
   const deletingCategory = categories.find((c) => c.id === deletingCatId);

@@ -72,8 +72,35 @@ export const getBrandRecommend = (brandId: string) =>
   api.get(`/api/v1/brands/${brandId}/recommend`);
 
 // ─── Brand Submit (브랜드 등록 신청) ───
-export const submitBrand = (body: { name: string; summary: string; story?: string; instagramUrl: string; websiteUrl?: string; keywords: string[]; managerName: string; email: string; phone: string }) =>
-  api.post("/api/v1/brands/submit", body);
+export const submitBrand = (
+  body: { name: string; summary: string; story?: string; instagramUrl: string; websiteUrl?: string; keywords: string[]; managerName: string; email: string; phone: string },
+  mainImage?: File | null,
+  visuals?: File[]
+) => {
+  const formData = new FormData();
+  formData.append(
+    "request",
+    new Blob(
+      [JSON.stringify({
+        name: body.name,
+        summary: body.summary,
+        story: body.story,
+        instagramUrl: body.instagramUrl,
+        websiteUrl: body.websiteUrl,
+        managerName: body.managerName,
+        managerEmail: body.email,
+        managerPhone: body.phone,
+        keywords: body.keywords,
+      })],
+      { type: "application/json" }
+    )
+  );
+  if (mainImage) formData.append("mainImage", mainImage);
+  if (visuals) visuals.forEach((f) => formData.append("visuals", f));
+  return api.post("/api/v1/brands/submit", formData, {
+    headers: { "Content-Type": undefined },
+  });
+};
 
 // ─── Brand Save (브랜드 저장하기) ───
 export const saveBrand = (brandId: string, categoryIds: number[]) =>
@@ -138,7 +165,5 @@ export const createManualBrandWithImage = (body: { name: string; instagramUrl?: 
   const formData = new FormData();
   formData.append("request", JSON.stringify(body));
   if (mainImage) formData.append("mainImage", mainImage);
-  return api.post("/api/v1/manual-brands", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  return api.post("/api/v1/manual-brands", formData);
 };

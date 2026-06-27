@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   Bookmark,
@@ -11,6 +11,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useSwatch } from "../context/SwatchContext";
+import { getBrandDetail } from "../api/swatching";
 
 const KEYWORD_LABELS: Record<string, string> = {
   Minimal: "미니멀",
@@ -36,8 +37,21 @@ export default function BrandNotePage() {
     saveBrand,
     addCategory,
   } = useSwatch();
-  const brand = brands.find((item) => item.id === id);
+  const baseBrand = brands.find((item) => item.id === id);
+  const [detail, setDetail] = useState<{ story: string; visuals: string[] } | null>(null);
   const savedBrand = savedBrands.find((item) => item.brandId === id);
+
+  useEffect(() => {
+    if (!id) return;
+    getBrandDetail(id)
+      .then((res) => {
+        const d = res.data?.data ?? res.data;
+        setDetail({ story: d.story ?? "", visuals: d.visuals ?? [] });
+      })
+      .catch(() => setDetail({ story: "", visuals: [] }));
+  }, [id]);
+
+  const brand = baseBrand ? { ...baseBrand, story: detail?.story ?? "", visuals: detail?.visuals ?? [] } : undefined;
   const [bookmarkModalOpen, setBookmarkModalOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [newCategoryOpen, setNewCategoryOpen] = useState(false);
@@ -49,28 +63,17 @@ export default function BrandNotePage() {
     scrollLeft: 0,
   });
 
-  const visualUrls = useMemo(
-    () =>
-      brand?.visuals.length
-        ? brand.visuals
-        : brands
-            .filter((item) => item.id !== brand?.id && item.thumbnailUrl)
-            .slice(0, 3)
-            .map((item) => item.thumbnailUrl),
-    [brand, brands],
-  );
+  const visualUrls = brand?.visuals ?? [];
 
-  const similarBrands = useMemo(() => {
-    if (!brand) return [];
-
-    return brands
-      .filter(
-        (item) =>
-          item.id !== brand.id &&
-          item.keywords.some((keyword) => brand.keywords.includes(keyword)),
-      )
-      .slice(0, 2);
-  }, [brand, brands]);
+  const similarBrands = brand
+    ? brands
+        .filter(
+          (item) =>
+            item.id !== brand.id &&
+            item.keywords.some((keyword) => brand.keywords.includes(keyword)),
+        )
+        .slice(0, 2)
+    : [];
 
   useEffect(() => {
     document.title = brand
