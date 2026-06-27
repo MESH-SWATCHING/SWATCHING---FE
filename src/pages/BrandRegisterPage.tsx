@@ -30,7 +30,7 @@ export default function BrandRegisterPage() {
     phone: "",
   });
 
-  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [, setThumbnail] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [visuals, setVisuals] = useState<File[]>([]);
   const [visualPreviews, setVisualPreviews] = useState<string[]>([]);
@@ -105,7 +105,7 @@ export default function BrandRegisterPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f5f2] pb-16">
-      <div className="max-w-md mx-auto px-5 pt-6">
+      <div className="px-5 pt-6">
         <div className="flex items-center gap-3 mb-6">
           <button onClick={() => navigate(-1)} className="text-[#1a1a1a]">
             <ChevronLeft size={22} />

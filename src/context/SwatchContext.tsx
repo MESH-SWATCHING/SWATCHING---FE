@@ -201,6 +201,7 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// oxlint-disable-next-line react/only-export-components
 export function useSwatch() {
   const ctx = useContext(SwatchContext);
   if (!ctx) throw new Error("SwatchProvider 안에서 사용해야 합니다");

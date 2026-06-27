@@ -20,7 +20,7 @@ export const MOCK_BRANDS = [
     story: "노멀레이어는 시간이 지나도 변하지 않는 옷을 만든다.",
     keywords: ["Minimal", "Classic"],
     thumbnailUrl:
-      "https://images.unsplash.com/photo-1511085959-2f15dac9dae5?w=400",
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400",
     visuals: [],
     instagramUrl: "https://instagram.com/normlayer",
     websiteUrl: "",

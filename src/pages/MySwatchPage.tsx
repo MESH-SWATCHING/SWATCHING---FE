@@ -27,7 +27,7 @@ export default function MySwatchPage() {
   const activeBrands = useMemo(() => {
     const ids = activeCategory?.brandIds ?? [];
     return brands.filter((b) => ids.includes(b.id));
-  }, [activeCatId, brands, categories]);
+  }, [activeCategory, brands]);
 
   const { displayedData, hasMore, loaderRef } = useInfiniteScroll({
     data: activeBrands,
@@ -54,7 +54,7 @@ export default function MySwatchPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f5f2] pb-28">
-      <div className="max-w-md mx-auto px-5 pt-8">
+      <div className="px-5 pt-8">
         {/* 헤더 */}
         <div className="mb-5">
           <img src={mySwatchLogo} alt="My Swatch" className="h-12  -ml-4" />
