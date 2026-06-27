@@ -23,7 +23,7 @@ export const MOOD_TO_EN: Record<Mood, string> = {
   페미닌: "Feminine",
   워크웨어: "Workwear",
   아메카지: "Amekaji",
-  악세사리: "Accessory",
+  악세사리: "Accessories",
 };
 
 export const EN_TO_MOOD: Record<string, Mood> = Object.fromEntries(

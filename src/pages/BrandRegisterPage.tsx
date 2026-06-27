@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Upload, X } from "lucide-react";
-import { MOODS } from "../constants/Moods";
-import api from "../api/client";
+import { MOODS, MOOD_TO_EN, Mood } from "../constants/Moods";
+import { submitBrand } from "../api/swatching";
 
 interface FormState {
   name: string;
@@ -33,7 +33,7 @@ export default function BrandRegisterPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [, setThumbnail] = useState<File | null>(null);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [visuals, setVisuals] = useState<File[]>([]);
   const [visualPreviews, setVisualPreviews] = useState<string[]>([]);
@@ -103,20 +103,25 @@ export default function BrandRegisterPage() {
     }
     setSubmitting(true);
     try {
-      await api.post("/api/v1/brands/submit", {
-        name: form.name,
-        summary: form.shortDesc,
-        instagramUrl: form.instagramUrl,
-        websiteUrl: form.websiteUrl,
-        managerName: form.managerName,
-        managerEmail: form.email,
-        managerPhone: form.phone,
-      });
+      await submitBrand(
+        {
+          name: form.name,
+          summary: form.shortDesc,
+          story: form.story,
+          instagramUrl: form.instagramUrl,
+          websiteUrl: form.websiteUrl,
+          keywords: form.keywords.map((kw) => MOOD_TO_EN[kw as Mood] ?? kw),
+          managerName: form.managerName,
+          email: form.email,
+          phone: form.phone,
+        },
+        thumbnail,
+        visuals
+      );
       setSubmitted(true);
       alert("등록 신청이 완료되었습니다.");
       navigate("/home");
-    } catch (e) {
-      console.error("등록 신청 실패", e);
+    } catch {
       alert("등록 신청에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setSubmitting(false);
@@ -203,11 +208,11 @@ export default function BrandRegisterPage() {
         <Field label="대표 이미지 및 Brand Visuals">
           <p className="text-xs text-[#888] mb-2">대표 이미지 (1장)</p>
           {thumbnailPreview ? (
-            <div className="relative w-full h-48 rounded-xl overflow-hidden mb-3">
+            <div className="relative w-full h-56 rounded-xl overflow-hidden mb-3 bg-[#f3f1ec]">
               <img
                 src={thumbnailPreview}
                 alt="대표이미지"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
               <button
                 onClick={removeThumbnail}

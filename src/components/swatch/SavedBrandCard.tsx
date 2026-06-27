@@ -90,22 +90,59 @@ export default function SavedBrandCard({
           </div>
 
           {/* 링크 */}
-          <div className="flex gap-3 mt-2">
-            <button
-              onClick={() => onNavigate(brand.id)}
-              className="text-xs text-[#555] flex items-center gap-0.5 underline underline-offset-2"
-            >
-              브랜드 노트 보기 →
-            </button>
-            {brand.instagramUrl && (
-              <a
-                href={brand.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-[#888] flex items-center gap-0.5"
-              >
-                Instagram <ExternalLink size={10} />
-              </a>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
+            {brand.isManual ? (
+              <>
+                {brand.instagramUrl && (
+                  <a
+                    href={brand.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-[#555] flex items-center gap-0.5 underline underline-offset-2 whitespace-nowrap"
+                  >
+                    Instagram <ExternalLink size={10} />
+                  </a>
+                )}
+                {brand.websiteUrl && (
+                  <a
+                    href={brand.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-[#555] flex items-center gap-0.5 underline underline-offset-2 whitespace-nowrap"
+                  >
+                    Website <ExternalLink size={10} />
+                  </a>
+                )}
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => onNavigate(brand.id)}
+                  className="text-xs text-[#555] flex items-center gap-0.5 underline underline-offset-2 whitespace-nowrap"
+                >
+                  브랜드 노트 보기 →
+                </button>
+                {brand.instagramUrl && (
+                  <a
+                    href={brand.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-[#888] flex items-center gap-0.5 whitespace-nowrap"
+                  >
+                    Instagram <ExternalLink size={10} />
+                  </a>
+                )}
+                {brand.websiteUrl && (
+                  <a
+                    href={brand.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-[#888] flex items-center gap-0.5 whitespace-nowrap"
+                  >
+                    Website <ExternalLink size={10} />
+                  </a>
+                )}
+              </>
             )}
           </div>
         </div>

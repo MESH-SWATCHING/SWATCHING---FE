@@ -71,14 +71,29 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
     try {
       const res = await swatchApi.getMySwatchCategories();
       const dto = res.data.data ?? res.data;
-      setCategories(
-        (dto as swatchApi.CategoryListDTO).categories.map((c) => ({
-          id: String(c.categoryId),
-          name: c.name,
-          brandIds: [],
-          isDefault: c.isDefault,
-        })),
+      const catList = (dto as swatchApi.CategoryListDTO).categories;
+
+      // 각 카테고리의 brandIds를 병렬로 가져옴
+      const brandIdsList = await Promise.all(
+        catList.map(async (c) => {
+          try {
+            const r = await swatchApi.getCategoryBrands(String(c.categoryId));
+            const d = r.data.data ?? r.data;
+            return ((d as swatchApi.SavedBrandListDTO).brands ?? []).map((b) => String(b.brandId));
+          } catch {
+            return [];
+          }
+        }),
       );
+
+      const mapped = catList.map((c, i) => ({
+        id: String(c.categoryId),
+        name: c.name,
+        brandIds: brandIdsList[i],
+        isDefault: c.isDefault,
+      }));
+      mapped.sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
+      setCategories(mapped);
     } catch { /* fallback to current state */ }
   }, []);
 
@@ -91,31 +106,21 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
       const res = await swatchApi.getCategoryBrands(catId);
       const dto = res.data.data ?? res.data;
       const brandList = (dto as swatchApi.SavedBrandListDTO).brands ?? [];
-      setSavedBrands(
-        brandList.map((b) => ({
-          id: String(b.savedBrandId),
-          brandId: String(b.brandId),
-          categoryIds: [],
-          memo: b.memo ?? "",
-        })),
+      const savedBrandList = brandList.map((b) => ({
+        id: String(b.savedBrandId),
+        brandId: String(b.brandId),
+        categoryIds: [],
+        memo: b.memo ?? "",
+      }));
+      setSavedBrands(savedBrandList);
+
+      // 전체 카테고리의 brandIds 업데이트
+      const allBrandIds = brandList.map((b) => String(b.brandId));
+      setCategories((prev) =>
+        prev.map((cat) =>
+          cat.isDefault ? { ...cat, brandIds: allBrandIds } : cat,
+        ),
       );
-      // 브랜드 정보도 업데이트
-      setBrands((prev) => {
-        const existing = new Set(prev.map((p) => p.id));
-        const newBrands = brandList
-          .filter((b) => !existing.has(String(b.brandId)))
-          .map((b) => ({
-            id: String(b.brandId),
-            name: b.brandName,
-            description: "",
-            story: "",
-            keywords: b.keywords ?? [],
-            thumbnailUrl: b.mainImageUrl ?? "",
-            visuals: [],
-            isManual: false,
-          }));
-        return [...prev, ...newBrands];
-      });
     } catch { /* fallback */ }
   }, [categories]);
 
