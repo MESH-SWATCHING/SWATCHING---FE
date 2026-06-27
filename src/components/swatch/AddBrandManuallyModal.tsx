@@ -61,9 +61,9 @@ export default function AddBrandManuallyModal({
   const isValid = name.trim().length > 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 z-[60] flex items-end justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-t-3xl w-full max-w-md px-5 pt-3 pb-10 max-h-[90vh] overflow-y-auto scrollbar-hide z-10 animate-slide-up">
+      <div className="relative bg-white rounded-t-3xl w-full max-w-md px-5 pt-3 pb-10 max-h-[90vh] overflow-y-auto scrollbar-hide z-10 animate-slide-up [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <div className="flex justify-center pb-4">
           <div className="w-10 h-1 bg-[#ddd] rounded-full" />
         </div>

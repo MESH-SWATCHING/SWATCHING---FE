@@ -265,7 +265,7 @@ export default function MySwatchPage() {
           onClose={() => setShowManualAdd(false)}
         />
       )}
-      <BottomNav />
+      {!showManualAdd && !addingBrandCatId && !deletingCatId && <BottomNav />}
     </div>
   );
 }

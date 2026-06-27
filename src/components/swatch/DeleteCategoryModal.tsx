@@ -10,7 +10,7 @@ export default function DeleteCategoryModal({
   onCancel,
 }: DeleteCategoryModalProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 z-[60] flex items-end justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative w-full max-w-md bg-white rounded-t-3xl z-10 px-6 pt-8 pb-6 animate-slide-up">
         <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">

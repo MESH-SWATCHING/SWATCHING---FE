@@ -38,7 +38,7 @@ export default function SaveToSwatchModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 z-[60] flex items-end justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       <div className="relative w-full max-w-md bg-white rounded-t-3xl z-10 px-6 pt-8 pb-6 animate-slide-up">
