@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useRef, useCallback, type ReactNode } from "react";
 import * as swatchApi from "../api/swatching";
-import { MOCK_BRANDS, MOCK_CATEGORIES, MOCK_SAVED_BRANDS } from "../mocks/brands";
+import { MOCK_CATEGORIES, MOCK_SAVED_BRANDS } from "../mocks/brands";
 
 // ─── 타입 ───
 export interface Brand {
@@ -57,12 +57,13 @@ const SwatchContext = createContext<SwatchContextType | null>(null);
 const USE_API = true;
 
 export function SwatchProvider({ children }: { children: ReactNode }) {
-  const [brands, setBrands] = useState<Brand[]>(MOCK_BRANDS as Brand[]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [categories, setCategories] = useState<Category[]>(MOCK_CATEGORIES);
   const [savedBrands, setSavedBrands] = useState<SavedBrand[]>(
     MOCK_SAVED_BRANDS.map((s) => ({ ...s, id: s.brandId })),
   );
   const [loading, setLoading] = useState(false);
+  const initialized = useRef(false);
 
   // ─── API fetch 함수들 ───
   const refreshCategories = useCallback(async () => {
@@ -143,10 +144,11 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
     } catch { /* fallback */ }
   }, []);
 
-  // 초기 로드 (토큰 있을 때만)
+  // 초기 로드 (한 번만 실행)
   useEffect(() => {
-    if (!USE_API) return;
+    if (!USE_API || initialized.current) return;
     if (!localStorage.getItem("accessToken")) return;
+    initialized.current = true;
     setLoading(true);
     Promise.all([refreshBrands(), refreshCategories(), refreshSavedBrands()])
       .finally(() => setLoading(false));
