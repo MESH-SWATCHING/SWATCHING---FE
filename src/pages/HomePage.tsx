@@ -112,7 +112,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#1b1c1a]">
+    <div className="min-h-screen bg-[#faf9f5] text-[#1b1c1a]">
       <header className="pointer-events-none absolute left-1/2 top-0 z-50 h-[60px] w-full -translate-x-1/2 bg-transparent">
         <div className="flex h-full items-center px-5">
           <div className="relative h-14 w-[180px] overflow-hidden">
