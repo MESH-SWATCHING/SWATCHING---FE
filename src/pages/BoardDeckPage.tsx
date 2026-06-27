@@ -36,9 +36,9 @@ export default function BoardDeckPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f5f2] pb-24">
-      <div className="max-w-md mx-auto px-5 pt-8">
+      <div className="max-w-md mx-auto px-5 pt-2">
         <div className="mb-8">
-          <img src={swatchDeckLogo} alt="Swatch Deck" className="h-12 block" />
+          <img src={swatchDeckLogo} alt="Swatch Deck" className="h-14 block" />
         </div>
 
         <h2 className="text-base font-bold text-[#1a1a1a] mb-4">무드 선택</h2>

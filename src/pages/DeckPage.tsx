@@ -91,10 +91,10 @@ export default function DeckPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f5f2] pb-28">
-      <div className="max-w-md mx-auto px-5 pt-8">
+      <div className="max-w-md mx-auto px-5 pt-2">
         {/* 헤더 */}
         <div className="flex items-center justify-between mb-6">
-          <img src={swatchDeckLogo} alt="Swatch Deck" className="h-12 block" />
+          <img src={swatchDeckLogo} alt="Swatch Deck" className="h-14 block" />
           <button onClick={() => navigate("/board")} className="text-xs text-[#888]">
             초기화
           </button>

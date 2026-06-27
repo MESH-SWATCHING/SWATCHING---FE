@@ -58,10 +58,10 @@ export default function MySwatchPage() {
 
   return (
     <div className="min-h-screen bg-[#faf9f5] pb-28">
-      <div className="px-5 pt-8">
+      <div className="px-5 pt-2">
         {/* 헤더 */}
         <div className="flex items-center justify-between mb-5">
-          <img src={mySwatchLogo} alt="My Swatch" className="h-12 block" />
+          <img src={mySwatchLogo} alt="My Swatch" className="h-14 block" />
           <div className="relative">
             <button
               onClick={() => setShowAccountPopup((prev) => !prev)}

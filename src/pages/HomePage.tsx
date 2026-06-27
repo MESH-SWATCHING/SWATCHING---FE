@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Bookmark, Check, Plus, Search, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSwatch } from "../context/SwatchContext";
-import swatchingLogo from "../assets/swatching-logo.png";
+import homeLogo from "../assets/homeLogo.svg";
 
 const FILTERS = [
   { id: "minimal", label: "미니멀", keyword: "Minimal" },
@@ -117,9 +117,9 @@ export default function HomePage() {
         <div className="flex h-full items-center px-5">
           <div className="relative h-14 w-[180px] overflow-hidden">
             <img
-              src={swatchingLogo}
+              src={homeLogo}
               alt="Swatching"
-              className="absolute left-1/2 top-1/2 size-[180px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain brightness-105 contrast-[500%]"
+              className="h-full object-contain"
             />
           </div>
           <div className="pointer-events-auto ml-auto flex items-center gap-4">

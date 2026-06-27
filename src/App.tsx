@@ -24,7 +24,7 @@ export default function App() {
                 <Route element={<Layout />}>
                   <Route path="/home" element={<HomePage />} />
                   <Route path="/board" element={<BoardDeckPage />} />
-                  <Route path="/swatch" element={<MySwatchPage />} />
+                  <Route path="/myswatch" element={<MySwatchPage />} />
                 </Route>
                 <Route path="/brand/:id" element={<BrandNotePage />} />
                 <Route path="/boardDeck" element={<DeckPage />} />

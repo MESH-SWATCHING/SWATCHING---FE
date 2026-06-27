@@ -3,7 +3,7 @@ import { Bookmark, Grid2X2, Home } from "lucide-react";
 
 function getActiveTab(pathname: string): string {
   if (pathname.startsWith("/board")) return "board";
-  if (pathname.startsWith("/swatch")) return "swatch";
+  if (pathname.startsWith("/myswatch")) return "swatch";
   if (pathname.startsWith("/home")) return "home";
   return "";
 }
@@ -27,7 +27,7 @@ export default function Layout() {
           {
             id: "swatch",
             label: "My Swatch",
-            path: "/swatch",
+            path: "/myswatch",
             icon: Bookmark,
           },
         ].map((tab) => {
