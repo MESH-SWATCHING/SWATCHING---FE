@@ -57,8 +57,8 @@ export default function MySwatchPage() {
   const addingBrandCategory = categories.find((c) => c.id === addingBrandCatId);
 
   return (
-    <div className="min-h-screen bg-[#f7f5f2] pb-28">
-      <div className="max-w-md mx-auto px-5 pt-8">
+    <div className="min-h-screen bg-[#faf9f5] pb-28">
+      <div className="px-5 pt-8">
         {/* 헤더 */}
         <div className="flex items-center justify-between mb-5">
           <img src={mySwatchLogo} alt="My Swatch" className="h-12 block" />
@@ -106,7 +106,7 @@ export default function MySwatchPage() {
                 setActiveCatId(cat.id);
                 setShowNewCatInput(false);
               }}
-              className={`relative flex-shrink-0 w-28 rounded-2xl px-3 py-3 text-left transition-colors cursor-pointer
+              className={`relative flex-shrink-0 w-24 rounded-2xl px-3 py-3 text-left transition-colors cursor-pointer
                 ${
                   activeCatId === cat.id
                     ? "bg-[#1a1a1a] text-white"
@@ -121,14 +121,14 @@ export default function MySwatchPage() {
                   }}
                   className={`absolute top-2 right-2 ${activeCatId === cat.id ? "text-white/50 hover:text-white" : "text-[#bbb]"}`}
                 >
-                  <Trash2 size={12} />
+                  <Trash2 size={10} />
                 </button>
               )}
               <FolderOpen
-                size={16}
-                className={`mb-2 ${activeCatId === cat.id ? "text-white" : "text-[#aaa]"}`}
+                size={14}
+                className={`mb-1.5 ${activeCatId === cat.id ? "text-white" : "text-[#aaa]"}`}
               />
-              <p className="text-xs font-semibold truncate">{cat.name}</p>
+              <p className="text-[11px] font-semibold truncate">{cat.name}</p>
               <p
                 className={`text-[10px] mt-0.5 ${activeCatId === cat.id ? "text-white/70" : "text-[#aaa]"}`}
               >
@@ -147,14 +147,14 @@ export default function MySwatchPage() {
           {/* 새 카테고리 버튼 */}
           <button
             onClick={() => setShowNewCatInput((prev) => !prev)}
-            className="flex-shrink-0 w-28 rounded-2xl border border-dashed border-[#ccc] flex flex-col items-center justify-center py-5 text-[#bbb] hover:border-[#1a1a1a] transition-colors"
+            className="flex-shrink-0 w-24 rounded-2xl border border-dashed border-[#ccc] flex flex-col items-center justify-center py-4 text-[#bbb] hover:border-[#1a1a1a] transition-colors"
           >
-            <Plus size={16} className="mb-1" />
-            <span className="text-xs">새 카테고리</span>
+            <Plus size={14} className="mb-1" />
+            <span className="text-[10px]">새 카테고리</span>
           </button>
         </div>
 
-        {/* 새 카테고리 입력 — 탭 바로 아래 인라인 */}
+        {/* 새 카테고리 입력 */}
         {showNewCatInput && (
           <div className="flex gap-2 mt-3">
             <input
@@ -175,31 +175,28 @@ export default function MySwatchPage() {
         )}
 
         {/* 카테고리 헤더 */}
-        <div className="flex items-center justify-between mt-6 mb-3">
-          <div>
-            <h2 className="text-base font-bold text-[#1a1a1a]">
-              {activeCategory?.name}
-            </h2>
-            <p className="text-xs text-[#aaa]">
-              이 카테고리에 담긴 브랜드 {activeBrands.length}개
-            </p>
-          </div>
-          {/* 전체 카테고리에도 브랜드 추가 / 직접 추가 버튼 표시 */}
-          <div className="flex gap-2">
+        <div className="flex items-center justify-between mt-5 mb-1">
+          <h2 className="text-sm font-bold text-[#1a1a1a]">
+            {activeCategory?.name}
+          </h2>
+          <div className="flex gap-1.5">
             <button
               onClick={() => setAddingBrandCatId(activeCatId)}
-              className="text-xs text-[#1a1a1a] font-medium flex items-center gap-1 border border-[#e0ddd8] rounded-xl px-3 py-2 bg-white"
+              className="text-[11px] text-[#1a1a1a] font-bold flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#f0ede8]"
             >
-              <Plus size={12} /> 브랜드 추가
+              <Plus size={11} /> 브랜드 추가
             </button>
             <button
               onClick={() => setShowManualAdd(true)}
-              className="text-xs text-[#1a1a1a] font-medium flex items-center gap-1 border border-[#e0ddd8] rounded-xl px-3 py-2 bg-white"
+              className="text-[11px] text-[#1a1a1a] font-bold flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#f0ede8]"
             >
-              <Plus size={12} /> 직접 추가
+              <Plus size={11} /> 직접 추가
             </button>
           </div>
         </div>
+        <p className="text-[11px] text-[#aaa] mb-4">
+          이 카테고리에 담긴 브랜드 {activeBrands.length}개
+        </p>
 
         {/* 브랜드 목록 */}
         {activeBrands.length === 0 ? (

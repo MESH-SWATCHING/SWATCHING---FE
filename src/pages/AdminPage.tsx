@@ -75,7 +75,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f5f2] pb-28">
-      <div className="max-w-md mx-auto px-5 pt-6">
+      <div className="px-5 pt-6">
         {/* 헤더 */}
         <div className="flex items-center gap-3 mb-6">
           <button onClick={() => navigate(-1)} className="text-[#1a1a1a]">
