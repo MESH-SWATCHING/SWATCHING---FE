@@ -1,41 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Eye, Clock } from "lucide-react";
+import api from "../api/client";
 
 type Status = "all" | "pending" | "approved" | "rejected";
 
 interface Application {
-  id: string;
+  brandId: number;
   brandName: string;
   shortDesc: string;
-  thumbnailUrl: string;
+  thumbnailUrl: string | null;
   appliedAt: string;
   applicant: string;
   status: "pending" | "approved" | "rejected";
 }
 
-const MOCK_APPLICATIONS: Application[] = [
-  {
-    id: "a1",
-    brandName: "ㅋㅋ",
-    shortDesc: "ㅋㅋ",
-    thumbnailUrl:
-      "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=200",
-    appliedAt: "2026-06-27",
-    applicant: "ㅋㅋ",
-    status: "pending",
-  },
-  {
-    id: "a2",
-    brandName: "ㅁㄴㅇㅁ",
-    shortDesc: "ㅁㅇㅇㅁㅇ",
-    thumbnailUrl:
-      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=200",
-    appliedAt: "2026-06-27",
-    applicant: "ㅁㅇ",
-    status: "pending",
-  },
-];
+function mapBackendStatus(visibility: string): "pending" | "approved" | "rejected" {
+  if (visibility === "PENDING") return "pending";
+  if (visibility === "PUBLIC") return "approved";
+  return "rejected";
+}
 
 const STATUS_TABS: { id: Status; label: string }[] = [
   { id: "all", label: "전체" },
@@ -58,25 +42,74 @@ const STATUS_COLOR: Record<Application["status"], string> = {
 
 export default function AdminPage() {
   const navigate = useNavigate();
-  const [applications, setApplications] =
-    useState<Application[]>(MOCK_APPLICATIONS);
+  const [applications, setApplications] = useState<Application[]>([]);
   const [activeStatus, setActiveStatus] = useState<Status>("all");
+  const [loading, setLoading] = useState(true);
+
+  const fetchBrands = async () => {
+    try {
+      const res = await api.get("/api/v1/admin/brands");
+      const data = res.data.data as {
+        brandId: number;
+        name: string;
+        summary: string | null;
+        mainImageUrl: string | null;
+        status: string;
+        createdAt: string;
+        submitterNickname: string | null;
+      }[];
+      setApplications(
+        data.map((b) => ({
+          brandId: b.brandId,
+          brandName: b.name,
+          shortDesc: b.summary ?? "",
+          thumbnailUrl: b.mainImageUrl,
+          appliedAt: b.createdAt ? b.createdAt.slice(0, 10) : "",
+          applicant: b.submitterNickname ?? "",
+          status: mapBackendStatus(b.status),
+        }))
+      );
+    } catch (e) {
+      console.error("브랜드 목록 조회 실패", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBrands();
+  }, []);
+
+  const approve = async (brandId: number) => {
+    try {
+      await api.patch(`/api/v1/admin/brands/${brandId}/approve`);
+      await fetchBrands();
+    } catch (e) {
+      console.error("승인 실패", e);
+      alert("승인에 실패했습니다.");
+    }
+  };
+
+  const reject = async (brandId: number) => {
+    const reason = prompt("반려 사유를 입력해주세요.");
+    if (!reason) return;
+    try {
+      await api.patch(`/api/v1/admin/brands/${brandId}/reject`, { reason });
+      await fetchBrands();
+    } catch (e) {
+      console.error("반려 실패", e);
+      alert("반려 처리에 실패했습니다.");
+    }
+  };
 
   const filtered =
     activeStatus === "all"
       ? applications
       : applications.filter((a) => a.status === activeStatus);
 
-  const updateStatus = (id: string, status: Application["status"]) => {
-    setApplications((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, status } : a)),
-    );
-  };
-
   return (
     <div className="min-h-screen bg-[#f7f5f2] pb-28">
       <div className="px-5 pt-6">
-        {/* 헤더 */}
         <div className="flex items-center gap-3 mb-6">
           <button onClick={() => navigate(-1)} className="text-[#1a1a1a]">
             <ChevronLeft size={22} />
@@ -84,7 +117,6 @@ export default function AdminPage() {
           <h1 className="text-lg font-bold text-[#1a1a1a]">브랜드 승인 관리</h1>
         </div>
 
-        {/* 상태 탭 */}
         <div className="flex gap-2 mb-5 overflow-x-auto pb-1 scrollbar-hide">
           {STATUS_TABS.map((tab) => (
             <button
@@ -102,30 +134,27 @@ export default function AdminPage() {
           ))}
         </div>
 
-        {/* 신청 목록 */}
-        {filtered.length === 0 ? (
-          <p className="text-sm text-[#bbb] text-center py-20">
-            신청 내역이 없습니다
-          </p>
+        {loading ? (
+          <p className="text-sm text-[#bbb] text-center py-20">불러오는 중...</p>
+        ) : filtered.length === 0 ? (
+          <p className="text-sm text-[#bbb] text-center py-20">신청 내역이 없습니다</p>
         ) : (
           <div className="flex flex-col gap-3">
             {filtered.map((app) => (
-              <div key={app.id} className="bg-white rounded-2xl p-4 shadow-sm">
+              <div key={app.brandId} className="bg-white rounded-2xl p-4 shadow-sm">
                 <div className="flex gap-3 mb-3">
-                  {/* 썸네일 */}
-                  <img
-                    src={app.thumbnailUrl}
-                    alt={app.brandName}
-                    className="w-14 h-14 rounded-xl object-cover flex-shrink-0"
-                  />
+                  {app.thumbnailUrl ? (
+                    <img
+                      src={app.thumbnailUrl}
+                      alt={app.brandName}
+                      className="w-14 h-14 rounded-xl object-cover flex-shrink-0"
+                    />
+                  ) : (
+                    <div className="w-14 h-14 rounded-xl bg-[#f0ede8] flex-shrink-0" />
+                  )}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-[#1a1a1a]">
-                      {app.brandName}
-                    </p>
-                    <p className="text-xs text-[#888] mt-0.5">
-                      {app.shortDesc}
-                    </p>
-                    {/* 상태 뱃지 */}
+                    <p className="text-sm font-bold text-[#1a1a1a]">{app.brandName}</p>
+                    <p className="text-xs text-[#888] mt-0.5">{app.shortDesc}</p>
                     <span
                       className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border mt-1.5 ${STATUS_COLOR[app.status]}`}
                     >
@@ -135,32 +164,29 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                {/* 신청 정보 */}
                 <div className="border-t border-[#f0ede8] pt-3 flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-[#aaa]">
-                      신청일: {app.appliedAt}
-                    </p>
-                    <p className="text-xs text-[#aaa]">
-                      제출자: {app.applicant}
-                    </p>
+                    <p className="text-xs text-[#aaa]">신청일: {app.appliedAt}</p>
+                    <p className="text-xs text-[#aaa]">제출자: {app.applicant}</p>
                   </div>
-                  <button className="flex items-center gap-1 text-xs text-[#555] font-medium">
+                  <button
+                    onClick={() => navigate(`/admin/brands/${app.brandId}`)}
+                    className="flex items-center gap-1 text-xs text-[#555] font-medium"
+                  >
                     <Eye size={13} /> 자세히 보기
                   </button>
                 </div>
 
-                {/* 승인 / 반려 버튼 (대기 상태만) */}
                 {app.status === "pending" && (
                   <div className="flex gap-2 mt-3">
                     <button
-                      onClick={() => updateStatus(app.id, "rejected")}
+                      onClick={() => reject(app.brandId)}
                       className="flex-1 py-2.5 rounded-xl bg-[#f0ede8] text-[#555] text-xs font-semibold"
                     >
                       반려
                     </button>
                     <button
-                      onClick={() => updateStatus(app.id, "approved")}
+                      onClick={() => approve(app.brandId)}
                       className="flex-1 py-2.5 rounded-xl bg-[#1a1a1a] text-white text-xs font-semibold"
                     >
                       승인하기

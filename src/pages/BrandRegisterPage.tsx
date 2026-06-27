@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Upload, X } from "lucide-react";
 import { MOODS } from "../constants/Moods";
+import api from "../api/client";
 
 interface FormState {
   name: string;
@@ -30,6 +31,8 @@ export default function BrandRegisterPage() {
     phone: "",
   });
 
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [, setThumbnail] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [visuals, setVisuals] = useState<File[]>([]);
@@ -92,15 +95,32 @@ export default function BrandRegisterPage() {
     form.email &&
     form.phone;
 
-  const handleSubmit = () => {
-    if (!isValid) return;
-    // TODO: API 연동
-    // const formData = new FormData()
-    // formData.append("name", form.name)
-    // if (thumbnail) formData.append("thumbnail", thumbnail)
-    // visuals.forEach((v) => formData.append("visuals", v))
-    alert("등록 신청이 완료되었습니다.");
-    navigate("/myswatch");
+  const handleSubmit = async () => {
+    if (!isValid || submitting) return;
+    if (submitted) {
+      alert("이미 신청이 완료되었습니다.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await api.post("/api/v1/brands/submit", {
+        name: form.name,
+        summary: form.shortDesc,
+        instagramUrl: form.instagramUrl,
+        websiteUrl: form.websiteUrl,
+        managerName: form.managerName,
+        managerEmail: form.email,
+        managerPhone: form.phone,
+      });
+      setSubmitted(true);
+      alert("등록 신청이 완료되었습니다.");
+      navigate("/home");
+    } catch (e) {
+      console.error("등록 신청 실패", e);
+      alert("등록 신청에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -287,11 +307,11 @@ export default function BrandRegisterPage() {
 
         <button
           onClick={handleSubmit}
-          disabled={!isValid}
+          disabled={!isValid || submitting}
           className={`w-full py-4 rounded-2xl text-sm font-semibold transition-colors mb-4
-            ${isValid ? "bg-[#1a1a1a] text-white" : "bg-[#e0ddd8] text-[#aaa]"}`}
+            ${isValid && !submitting ? "bg-[#1a1a1a] text-white" : "bg-[#e0ddd8] text-[#aaa]"}`}
         >
-          등록 신청하기
+          {submitting ? "신청 중..." : "등록 신청하기"}
         </button>
       </div>
     </div>

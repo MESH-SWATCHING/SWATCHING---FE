@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../api/client";
 
 export default function AuthCallbackPage() {
   const navigate = useNavigate();
@@ -10,7 +11,19 @@ export default function AuthCallbackPage() {
     if (token) {
       localStorage.setItem("accessToken", token);
     }
-    navigate("/home", { replace: true });
+
+    api.get("/api/v1/me")
+      .then((res) => {
+        const role = res.data.data?.role;
+        if (role === "ADMIN") {
+          navigate("/admin", { replace: true });
+        } else {
+          navigate("/home", { replace: true });
+        }
+      })
+      .catch(() => {
+        navigate("/home", { replace: true });
+      });
   }, [navigate]);
 
   return (
