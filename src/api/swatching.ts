@@ -80,8 +80,7 @@ export const submitBrand = (
   const formData = new FormData();
   formData.append(
     "request",
-    new Blob(
-      [JSON.stringify({
+    JSON.stringify({
         name: body.name,
         summary: body.summary,
         story: body.story,
@@ -91,15 +90,11 @@ export const submitBrand = (
         managerEmail: body.email,
         managerPhone: body.phone,
         keywords: body.keywords,
-      })],
-      { type: "application/json" }
-    )
+      }),
   );
   if (mainImage) formData.append("mainImage", mainImage);
   if (visuals) visuals.forEach((f) => formData.append("visuals", f));
-  return api.post("/api/v1/brands/submit", formData, {
-    headers: { "Content-Type": undefined },
-  });
+  return api.post("/api/v1/brands/submit", formData);
 };
 
 // ─── Brand Save (브랜드 저장하기) ───
@@ -139,6 +134,11 @@ export const getMySwatchCategories = () =>
 export const getCategoryBrands = (categoryId: string) =>
   api.get<ApiResponse<SavedBrandListDTO>>(`/api/v1/my-swatch/categories/${categoryId}/brands`);
 
+export const addSavedBrandsToCategory = (categoryId: string, savedBrandIds: string[]) =>
+  api.post(`/api/v1/my-swatch/categories/${categoryId}/saved-brands`, {
+    savedBrandIds: savedBrandIds.map(Number),
+  });
+
 // ─── Categories (생성/삭제) ───
 export interface CategoryResponse {
   categoryId: number;
@@ -158,12 +158,30 @@ export const updateMemo = (savedBrandId: string, memo: string) =>
   api.patch(`/api/v1/saved-brands/${savedBrandId}/memo`, { memo });
 
 // ─── Manual Brand ───
-export const createManualBrand = (body: { name: string; instagramUrl?: string; websiteUrl?: string; memo?: string; categoryIds: number[] }) =>
-  api.post("/api/v1/manual-brands", body);
+export interface ManualBrandResponse {
+  savedBrandId: number;
+  brandId: number;
+  name: string;
+  mainImageUrl: string | null;
+  imageUrls: string[];
+  isManual: boolean;
+  categoryIds: number[];
+}
 
-export const createManualBrandWithImage = (body: { name: string; instagramUrl?: string; websiteUrl?: string; memo?: string; categoryIds: number[] }, mainImage?: File) => {
+type ManualBrandRequest = {
+  name: string;
+  instagramUrl?: string;
+  websiteUrl?: string;
+  memo?: string;
+  categoryIds: number[];
+};
+
+export const createManualBrand = (body: ManualBrandRequest) =>
+  api.post<ApiResponse<ManualBrandResponse>>("/api/v1/manual-brands", body);
+
+export const createManualBrandWithImage = (body: ManualBrandRequest, mainImage?: File) => {
   const formData = new FormData();
   formData.append("request", JSON.stringify(body));
   if (mainImage) formData.append("mainImage", mainImage);
-  return api.post("/api/v1/manual-brands", formData);
+  return api.post<ApiResponse<ManualBrandResponse>>("/api/v1/manual-brands", formData);
 };

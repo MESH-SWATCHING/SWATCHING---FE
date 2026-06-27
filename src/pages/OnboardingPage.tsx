@@ -1,9 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import mascotLogo from "../assets/swatching-mascot.png";
 
-export default function OnboardingPage() {
-  const navigate = useNavigate();
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
+export default function OnboardingPage() {
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-between overflow-hidden bg-[#f7f6f1]">
       {/* Background Doodles */}
@@ -49,7 +48,9 @@ export default function OnboardingPage() {
       <footer className="z-10 w-full px-6 pb-20">
         <button
           type="button"
-          onClick={() => { window.location.href = "http://localhost:8080/oauth2/authorization/google"; }}
+          onClick={() => {
+            window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
+          }}
           className="flex w-full items-center justify-center gap-3 rounded-2xl border border-gray-200 bg-white px-6 py-4 text-[15px] font-medium text-[#3c4043] shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

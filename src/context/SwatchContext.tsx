@@ -49,7 +49,7 @@ interface SwatchContextType {
   removeBrandFromCategory: (categoryId: string, savedBrandId: string) => Promise<void>;
 
   updateMemo: (savedBrandId: string, memo: string) => Promise<void>;
-  addManualBrand: (brand: { name: string; instagramUrl?: string; websiteUrl?: string; categoryIds: string[]; image?: File }) => Promise<void>;
+  addManualBrand: (brand: { name: string; instagramUrl?: string; websiteUrl?: string; memo?: string; categoryIds: string[]; image?: File }) => Promise<void>;
 }
 
 const SwatchContext = createContext<SwatchContextType | null>(null);
@@ -101,8 +101,11 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
     if (!USE_API) return;
     try {
       // "전체" 카테고리의 브랜드를 가져옴
-      const allCat = categories.find((c) => c.isDefault);
-      const catId = allCat?.id ?? "all";
+      const catRes = await swatchApi.getMySwatchCategories();
+      const catDto = catRes.data.data ?? catRes.data;
+      const allCat = (catDto as swatchApi.CategoryListDTO).categories.find((c) => c.isDefault);
+      if (!allCat) return;
+      const catId = String(allCat.categoryId);
       const res = await swatchApi.getCategoryBrands(catId);
       const dto = res.data.data ?? res.data;
       const brandList = (dto as swatchApi.SavedBrandListDTO).brands ?? [];
@@ -113,6 +116,22 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
         memo: b.memo ?? "",
       }));
       setSavedBrands(savedBrandList);
+      setBrands((prev) => {
+        const existing = new Set(prev.map((p) => p.id));
+        const newBrands = brandList
+          .filter((b) => !existing.has(String(b.brandId)))
+          .map((b) => ({
+            id: String(b.brandId),
+            name: b.brandName,
+            description: "",
+            story: "",
+            keywords: b.keywords ?? [],
+            thumbnailUrl: b.mainImageUrl ?? "",
+            visuals: [],
+            isManual: true,
+          }));
+        return [...prev, ...newBrands];
+      });
 
       // 전체 카테고리의 brandIds 업데이트
       const allBrandIds = brandList.map((b) => String(b.brandId));
@@ -122,7 +141,7 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
         ),
       );
     } catch { /* fallback */ }
-  }, [categories]);
+  }, []);
 
   const refreshBrands = useCallback(async () => {
     if (!USE_API) return;
@@ -211,7 +230,7 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
   const addBrandToCategory = async (categoryId: string, savedBrandIds: string[]) => {
     if (USE_API) {
       // 브랜드를 해당 카테고리에 저장 (saveBrand로 대체)
-      await Promise.all(savedBrandIds.map((id) => swatchApi.saveBrand(id, [Number(categoryId)])));
+      await swatchApi.addSavedBrandsToCategory(categoryId, savedBrandIds);
       await Promise.all([refreshCategories(), refreshSavedBrands()]);
     } else {
       setCategories((prev) =>
@@ -248,19 +267,41 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const addManualBrand = async (brand: { name: string; instagramUrl?: string; websiteUrl?: string; categoryIds: string[]; image?: File }) => {
+  const addManualBrand = async (brand: { name: string; instagramUrl?: string; websiteUrl?: string; memo?: string; categoryIds: string[]; image?: File }) => {
     if (USE_API) {
+      const categoryIds = brand.categoryIds
+        .map(Number)
+        .filter((categoryId) => Number.isFinite(categoryId));
       const body = {
         name: brand.name,
-        instagramUrl: brand.instagramUrl,
-        websiteUrl: brand.websiteUrl,
-        categoryIds: brand.categoryIds.map(Number),
+        instagramUrl: brand.instagramUrl || undefined,
+        websiteUrl: brand.websiteUrl || undefined,
+        memo: brand.memo || undefined,
+        categoryIds,
       };
-      if (brand.image) {
-        await swatchApi.createManualBrandWithImage(body, brand.image);
-      } else {
-        await swatchApi.createManualBrand(body);
-      }
+      const res = brand.image
+        ? await swatchApi.createManualBrandWithImage(body, brand.image)
+        : await swatchApi.createManualBrand(body);
+      const dto = res.data.data ?? res.data;
+      const manualBrand = dto as swatchApi.ManualBrandResponse;
+      setBrands((prev) => {
+        if (prev.some((b) => b.id === String(manualBrand.brandId))) return prev;
+        return [
+          ...prev,
+          {
+            id: String(manualBrand.brandId),
+            name: manualBrand.name,
+            description: "",
+            story: "",
+            keywords: [],
+            thumbnailUrl: manualBrand.mainImageUrl ?? "",
+            visuals: manualBrand.imageUrls ?? [],
+            instagramUrl: brand.instagramUrl,
+            websiteUrl: brand.websiteUrl,
+            isManual: true,
+          },
+        ];
+      });
       await Promise.all([refreshCategories(), refreshSavedBrands()]);
     } else {
       const newBrand: Brand = {

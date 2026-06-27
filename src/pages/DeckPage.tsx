@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Bookmark, ExternalLink } from "lucide-react";
 import { useSwatch, type Brand } from "../context/SwatchContext";
 import { getBrandsDeck } from "../api/swatching";
-import { EN_TO_MOOD } from "../constants/Moods";
+import { EN_TO_MOOD, moodLabel } from "../constants/Moods";
 import swatchDeckLogo from "../assets/swatchDeckLogo.svg";
 import SaveToSwatchModal from "../components/swatch/SaveToSwatchModal";
 
@@ -130,7 +130,7 @@ export default function DeckPage() {
               {brand.keywords.map((kw, i) => (
                 <span key={kw}>
                   {i > 0 && <span className="text-xs text-[#ccc] mr-1.5">·</span>}
-                  <span className="text-xs text-[#555]">{EN_TO_MOOD[kw] || kw}</span>
+                  <span className="text-xs text-[#555]">{moodLabel(kw)}</span>
                 </span>
               ))}
             </div>

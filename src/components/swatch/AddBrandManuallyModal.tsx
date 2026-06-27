@@ -63,6 +63,7 @@ export default function AddBrandManuallyModal({
         name: name.trim(),
         instagramUrl: normalizedUrl?.includes("instagram") ? normalizedUrl : undefined,
         websiteUrl: normalizedUrl && !normalizedUrl.includes("instagram") ? normalizedUrl : undefined,
+        memo: memo.trim() || undefined,
         categoryIds: selectedCats,
         image: image ?? undefined,
       });

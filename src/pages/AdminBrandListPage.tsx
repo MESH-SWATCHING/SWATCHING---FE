@@ -1,9 +1,10 @@
 import { useState } from "react";
+import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
 type FilterStatus = "전체" | "승인 대기" | "승인 완료" | "반려";
 
-const STATUS_BADGE: Record<string, { bg: string; text: string; icon: JSX.Element; label: string }> = {
+const STATUS_BADGE: Record<string, { bg: string; text: string; icon: ReactNode; label: string }> = {
   pending: {
     bg: "bg-[#FFF5E0]", text: "text-[#D97706]", label: "승인 대기",
     icon: (

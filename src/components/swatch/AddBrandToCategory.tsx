@@ -18,8 +18,12 @@ export default function AddBrandToCategory({
 
   const currentCat = categories.find((c) => c.id === categoryId);
   const alreadyInCategory = currentCat?.brandIds ?? [];
-  const savedBrandIds = new Set(savedBrands.map((s) => s.brandId));
-  const availableBrands = brands.filter((b) => savedBrandIds.has(b.id));
+  const availableBrands = savedBrands
+    .map((saved) => {
+      const brand = brands.find((b) => b.id === saved.brandId);
+      return brand ? { brand, savedBrandId: saved.id } : null;
+    })
+    .filter((item): item is { brand: (typeof brands)[number]; savedBrandId: string } => item !== null);
 
   const toggle = (id: string) => {
     setSelected((prev) =>
@@ -51,13 +55,13 @@ export default function AddBrandToCategory({
               저장된 브랜드가 없어요
             </p>
           ) : (
-            availableBrands.map((brand) => {
-              const isSelected = selected.includes(brand.id);
+            availableBrands.map(({ brand, savedBrandId }) => {
+              const isSelected = selected.includes(savedBrandId);
               const isAlready = alreadyInCategory.includes(brand.id);
               return (
                 <button
-                  key={brand.id}
-                  onClick={() => !isAlready && toggle(brand.id)}
+                  key={savedBrandId}
+                  onClick={() => !isAlready && toggle(savedBrandId)}
                   className={`flex items-center gap-3 rounded-xl p-3 transition-colors text-left
                     ${isSelected ? "bg-[#f7f5f2]" : ""}
                     ${isAlready ? "opacity-40 cursor-default" : "cursor-pointer"}`}

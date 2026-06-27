@@ -30,9 +30,14 @@ export default function MySwatchPage() {
   const isAllCategory = activeCatId === "all" || activeCategory?.isDefault;
 
   const activeBrands = useMemo(() => {
+    if (activeCatId === "all" || !activeCategory || activeCategory.isDefault) {
+      return savedBrands
+        .map((saved) => brands.find((brand) => brand.id === saved.brandId))
+        .filter((brand): brand is (typeof brands)[number] => brand !== undefined);
+    }
     const ids = activeCategory?.brandIds ?? [];
     return brands.filter((b) => ids.includes(b.id));
-  }, [activeCategory, brands]);
+  }, [activeCatId, activeCategory, savedBrands, brands]);
 
   const { displayedData, hasMore, loaderRef } = useInfiniteScroll({
     data: activeBrands,

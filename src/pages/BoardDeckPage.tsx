@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MOODS } from "../constants/Moods";
+import { MOOD_OPTIONS, EN_TO_MOOD, MOOD_TO_EN } from "../constants/Moods";
+import type { Mood } from "../constants/Moods";
 import { getKeywords } from "../api/swatching";
 import swatchDeckLogo from "../assets/swatchDeckLogo.svg";
 
 const MAX_SELECT = 3;
+type KeywordOption = { label: string; value: string };
 
 export default function BoardDeckPage() {
   const navigate = useNavigate();
-  const [keywords, setKeywords] = useState<string[]>([...MOODS]);
+  const [keywords, setKeywords] = useState<KeywordOption[]>([...MOOD_OPTIONS]);
   const [selected, setSelected] = useState<string[]>([]);
   const [shaking, setShaking] = useState<string | null>(null);
 
@@ -16,21 +18,26 @@ export default function BoardDeckPage() {
     getKeywords()
       .then(({ data }) => {
         const fetched = data.data ?? data;
-        if (Array.isArray(fetched) && fetched.length >= MOODS.length) {
-          setKeywords(fetched.map((k: { name: string }) => k.name));
+        if (Array.isArray(fetched) && fetched.length > 0) {
+          setKeywords(
+            fetched.map((k: { name: string }) => ({
+              label: EN_TO_MOOD[k.name] ?? k.name,
+              value: MOOD_TO_EN[k.name as Mood] ?? k.name,
+            })),
+          );
         }
       })
       .catch(() => {});
   }, []);
 
-  const toggle = (mood: string) => {
-    if (selected.includes(mood)) {
-      setSelected((prev) => prev.filter((m) => m !== mood));
+  const toggle = (keyword: string) => {
+    if (selected.includes(keyword)) {
+      setSelected((prev) => prev.filter((m) => m !== keyword));
     } else if (selected.length >= MAX_SELECT) {
-      setShaking(mood);
+      setShaking(keyword);
       setTimeout(() => setShaking(null), 200);
     } else {
-      setSelected((prev) => [...prev, mood]);
+      setSelected((prev) => [...prev, keyword]);
     }
   };
 
@@ -46,13 +53,13 @@ export default function BoardDeckPage() {
         <div className="flex flex-wrap gap-2 mb-8">
           {keywords.map((mood) => (
             <button
-              key={mood}
-              onClick={() => toggle(mood)}
+              key={mood.value}
+              onClick={() => toggle(mood.value)}
               className={`px-4 py-2.5 rounded-full text-xs font-semibold transition-colors duration-200 active:scale-95 border
-                ${selected.includes(mood) ? "bg-[#1a1a1a] text-white border-[#1a1a1a]" : "bg-white text-[#1a1a1a] border-[#e0ddd8]"}
-                ${shaking === mood ? "animate-shake" : ""}`}
+                ${selected.includes(mood.value) ? "bg-[#1a1a1a] text-white border-[#1a1a1a]" : "bg-white text-[#1a1a1a] border-[#e0ddd8]"}
+                ${shaking === mood.value ? "animate-shake" : ""}`}
             >
-              {mood}
+              {mood.label}
             </button>
           ))}
         </div>
