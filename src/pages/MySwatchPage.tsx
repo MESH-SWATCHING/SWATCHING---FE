@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, FolderOpen, Trash2, Settings, User } from "lucide-react";
 import { toast } from "sonner";
@@ -25,6 +25,7 @@ export default function MySwatchPage() {
   const [addingBrandCatId, setAddingBrandCatId] = useState<string | null>(null);
   const [showManualAdd, setShowManualAdd] = useState(false);
   const [showAccountPopup, setShowAccountPopup] = useState(false);
+  const catScrollRef = useRef<HTMLDivElement>(null);
 
   const activeCategory = categories.find((c) => c.id === activeCatId);
 
@@ -98,13 +99,19 @@ export default function MySwatchPage() {
         <p className="text-[10px] font-semibold text-[#aaa] tracking-widest mb-3">
           MY CATEGORIES
         </p>
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <div ref={catScrollRef} className="flex gap-2 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {categories.map((cat) => (
             <div
               key={cat.id}
-              onClick={() => {
+              onClick={(e) => {
                 setActiveCatId(cat.id);
                 setShowNewCatInput(false);
+                const container = catScrollRef.current;
+                const el = e.currentTarget as HTMLElement;
+                if (container) {
+                  const offset = Math.max(0, el.offsetLeft - container.offsetLeft - 48);
+                  container.scrollTo({ left: offset, behavior: "smooth" });
+                }
               }}
               className={`relative flex-shrink-0 w-24 rounded-2xl px-3 py-3 text-left transition-colors cursor-pointer
                 ${

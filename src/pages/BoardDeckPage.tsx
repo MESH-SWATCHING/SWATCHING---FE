@@ -16,8 +16,9 @@ export default function BoardDeckPage() {
   useEffect(() => {
     getKeywords()
       .then(({ data }) => {
-        if (data.keywords?.length) {
-          setKeywords(data.keywords.map((k: { name: string }) => k.name));
+        const keywords = data.data ?? data;
+        if (Array.isArray(keywords) && keywords.length) {
+          setKeywords(keywords.map((k: { name: string }) => k.name));
         }
       })
       .catch(() => { /* fallback to MOODS */ });

@@ -245,7 +245,7 @@ export default function BrandNotePage() {
             onPointerMove={moveVisualDrag}
             onPointerUp={endVisualDrag}
             onPointerCancel={endVisualDrag}
-            className="no-scrollbar flex cursor-grab snap-x snap-mandatory gap-3 overflow-x-auto px-5 select-none touch-pan-y active:cursor-grabbing"
+            className="flex cursor-grab snap-x snap-mandatory gap-3 overflow-x-auto px-5 select-none touch-pan-y active:cursor-grabbing [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           >
             {visualUrls.map((url, index) => (
               <div

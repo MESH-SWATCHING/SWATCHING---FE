@@ -54,7 +54,7 @@ export default function SaveToSwatchModal({
         </div>
 
         {/* 카테고리 목록 */}
-        <div className="flex flex-col gap-1 mb-5 max-h-48 overflow-y-auto scrollbar-hide">
+        <div className="flex flex-col gap-1 mb-5 max-h-48 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {categories.map((cat) => {
             const isSelected = selectedCatIds.includes(cat.id);
             const isAll = cat.id === "all";

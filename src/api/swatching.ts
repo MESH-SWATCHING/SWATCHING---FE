@@ -1,25 +1,62 @@
 import api from "./client";
 
+// ─── 공통 응답 래퍼 ───
+interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
 // ─── Auth ───
 export const signup = (body: { email: string; password: string; nickname: string }) =>
   api.post("/api/v1/auth/signup", body);
 
 export const login = (body: { email: string; password: string }) =>
-  api.post<{ accessToken: string }>("/api/v1/auth/login", body);
+  api.post<ApiResponse<{ accessToken: string }>>("/api/v1/auth/login", body);
 
 export const getMe = () =>
   api.get("/api/v1/users/me");
 
 // ─── Keywords (무드) ───
+export interface KeywordDto {
+  keywordId: number;
+  name: string;
+}
+
 export const getKeywords = () =>
-  api.get<{ keywords: { id: number; name: string }[] }>("/api/v1/keywords");
+  api.get<ApiResponse<KeywordDto[]>>("/api/v1/keywords");
 
 // ─── Brands ───
+export interface BrandResponseDto {
+  brandId: number;
+  name: string;
+  summary: string;
+  mainImageUrl: string;
+  keywords: string[];
+}
+
+export interface BrandCardDto {
+  brandId: number;
+  name: string;
+  summary: string;
+  storySummary: string;
+  mainImageUrl: string;
+  instagramUrl: string | null;
+  websiteUrl: string | null;
+  keywords: string[];
+  visualPreviews: string[];
+}
+
+export interface BrandDeckResponseDto {
+  totalCount: number;
+  brandCards: BrandCardDto[];
+}
+
 export const getBrands = (keywords?: string) =>
-  api.get("/api/v1/brands", { params: keywords ? { keywords } : undefined });
+  api.get<ApiResponse<BrandResponseDto[]>>("/api/v1/brands", { params: keywords ? { keywords } : undefined });
 
 export const getBrandsDeck = (keywords: string) =>
-  api.get("/api/v1/brands/deck", { params: { keywords } });
+  api.get<ApiResponse<BrandDeckResponseDto>>("/api/v1/brands/deck", { params: { keywords } });
 
 export const getBrandDetail = (brandId: string) =>
   api.get(`/api/v1/brands/${brandId}`);

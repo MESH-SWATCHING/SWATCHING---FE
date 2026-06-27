@@ -69,16 +69,36 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
   const refreshCategories = useCallback(async () => {
     if (!USE_API) return;
     try {
-      const { data } = await swatchApi.getCategories();
-      setCategories(data);
+      const res = await swatchApi.getCategories();
+      setCategories(res.data.data ?? res.data);
     } catch { /* fallback to current state */ }
   }, []);
 
   const refreshSavedBrands = useCallback(async () => {
     if (!USE_API) return;
     try {
-      const { data } = await swatchApi.getCategoryBrands("all");
-      setSavedBrands(data);
+      const res = await swatchApi.getCategoryBrands("all");
+      setSavedBrands(res.data.data ?? res.data);
+    } catch { /* fallback */ }
+  }, []);
+
+  const refreshBrands = useCallback(async () => {
+    if (!USE_API) return;
+    try {
+      const res = await swatchApi.getBrands();
+      const raw = res.data.data ?? res.data;
+      setBrands(
+        (raw as swatchApi.BrandResponseDto[]).map((b) => ({
+          id: String(b.brandId),
+          name: b.name,
+          description: b.summary,
+          story: "",
+          keywords: b.keywords,
+          thumbnailUrl: b.mainImageUrl,
+          visuals: [],
+          isManual: false,
+        })),
+      );
     } catch { /* fallback */ }
   }, []);
 
@@ -86,9 +106,9 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!USE_API) return;
     setLoading(true);
-    Promise.all([refreshCategories(), refreshSavedBrands()])
+    Promise.all([refreshBrands(), refreshCategories(), refreshSavedBrands()])
       .finally(() => setLoading(false));
-  }, [refreshCategories, refreshSavedBrands]);
+  }, [refreshBrands, refreshCategories, refreshSavedBrands]);
 
   // ─── 액션 함수들 ───
   const isSaved = (brandId: string) =>

@@ -30,7 +30,21 @@ export default function DeckPage() {
     setLoading(true);
     getBrandsDeck(moodsParam)
       .then(({ data }) => {
-        setDeckBrands(data.brands || data);
+        const raw = data.data ?? data;
+        const cards = (raw as any).brandCards ?? raw;
+        setDeckBrands(
+          (cards as { brandId: number; name: string; summary: string; storySummary: string; mainImageUrl: string; instagramUrl: string | null; websiteUrl: string | null; keywords: string[]; visualPreviews: string[] }[]).map((c) => ({
+            id: String(c.brandId),
+            name: c.name,
+            description: c.summary,
+            story: c.storySummary ?? "",
+            keywords: c.keywords,
+            thumbnailUrl: c.mainImageUrl,
+            visuals: c.visualPreviews ?? [],
+            instagramUrl: c.instagramUrl ?? undefined,
+            websiteUrl: c.websiteUrl ?? undefined,
+          })),
+        );
       })
       .catch(() => {
         // fallback: context 브랜드에서 키워드 필터
