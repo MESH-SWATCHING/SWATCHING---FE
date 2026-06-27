@@ -27,12 +27,9 @@ export const getBrandDetail = (brandId: string) =>
 export const getBrandRecommend = (brandId: string) =>
   api.get(`/api/v1/brands/${brandId}/recommend`);
 
-// ─── Saved Brands ───
-export const getSavedBrands = (params?: { categoryId?: string; keyword?: string; page?: number; size?: number }) =>
-  api.get("/api/v1/saved-brands", { params });
-
-export const saveBrand = (body: { brandId: string; categoryIds: string[] }) =>
-  api.post("/api/v1/saved-brands", body);
+// ─── Brand Save (브랜드 저장하기) ───
+export const saveBrand = (brandId: string, categoryIds: string[]) =>
+  api.post(`/api/v1/brands/${brandId}/save`, { categoryIds });
 
 export const deleteSavedBrand = (savedBrandId: string) =>
   api.delete(`/api/v1/saved-brands/${savedBrandId}`);
@@ -40,21 +37,25 @@ export const deleteSavedBrand = (savedBrandId: string) =>
 export const updateMemo = (savedBrandId: string, memo: string) =>
   api.patch(`/api/v1/saved-brands/${savedBrandId}/memo`, { memo });
 
-// ─── Categories ───
+// ─── My Swatch Categories ───
 export const getCategories = () =>
-  api.get("/api/v1/categories");
+  api.get("/api/v1/my-swatch/categories");
 
 export const createCategory = (name: string) =>
-  api.post("/api/v1/categories", { name });
+  api.post("/api/v1/my-swatch/categories", { name });
 
 export const deleteCategory = (categoryId: string) =>
-  api.delete(`/api/v1/categories/${categoryId}`);
+  api.delete(`/api/v1/my-swatch/categories/${categoryId}`);
+
+// ─── My Swatch Category Brands ───
+export const getCategoryBrands = (categoryId: string) =>
+  api.get(`/api/v1/my-swatch/categories/${categoryId}/brands`);
 
 export const addBrandToCategory = (categoryId: string, savedBrandId: string) =>
-  api.post(`/api/v1/categories/${categoryId}/saved-brands`, { savedBrandId });
+  api.post(`/api/v1/my-swatch/categories/${categoryId}/brands`, { savedBrandId });
 
 export const removeBrandFromCategory = (categoryId: string, savedBrandId: string) =>
-  api.delete(`/api/v1/categories/${categoryId}/saved-brands/${savedBrandId}`);
+  api.delete(`/api/v1/my-swatch/categories/${categoryId}/brands/${savedBrandId}`);
 
 // ─── Manual Brand ───
 export const createManualBrand = (body: { name: string; instagramUrl?: string; websiteUrl?: string; categoryIds: string[]; image?: File }) => {

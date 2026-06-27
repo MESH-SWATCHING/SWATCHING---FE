@@ -77,7 +77,7 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
   const refreshSavedBrands = useCallback(async () => {
     if (!USE_API) return;
     try {
-      const { data } = await swatchApi.getSavedBrands();
+      const { data } = await swatchApi.getCategoryBrands("all");
       setSavedBrands(data);
     } catch { /* fallback */ }
   }, []);
@@ -96,7 +96,7 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
 
   const saveBrand = async (brandId: string, categoryIds: string[]) => {
     if (USE_API) {
-      await swatchApi.saveBrand({ brandId, categoryIds });
+      await swatchApi.saveBrand(brandId, categoryIds);
       await Promise.all([refreshCategories(), refreshSavedBrands()]);
     } else {
       // mock fallback
