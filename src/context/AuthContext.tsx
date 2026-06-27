@@ -2,9 +2,10 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from "
 import { login as loginApi, signup as signupApi, getMe } from "../api/swatching";
 
 interface User {
-  id: string;
-  email: string;
+  userId: number;
   nickname: string;
+  email: string;
+  role: string;
 }
 
 interface AuthContextType {
@@ -29,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     getMe()
-      .then(({ data }) => setUser(data))
+      .then(({ data }) => setUser((data as any).data ?? data))
       .catch(() => localStorage.removeItem("accessToken"))
       .finally(() => setLoading(false));
   }, []);
