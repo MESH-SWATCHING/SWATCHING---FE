@@ -49,7 +49,7 @@ export default function OnboardingPage() {
       <footer className="z-10 w-full px-6 pb-20">
         <button
           type="button"
-          onClick={() => navigate("/")}
+          onClick={() => { window.location.href = "http://localhost:8080/oauth2/authorization/google"; }}
           className="flex w-full items-center justify-center gap-3 rounded-2xl border border-gray-200 bg-white px-6 py-4 text-[15px] font-medium text-[#3c4043] shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
