@@ -10,6 +10,8 @@ import BrandRegisterPage from "./pages/BrandRegisterPage";
 import AdminPage from "./pages/AdminPage";
 import BoardDeckPage from "./pages/BoardDeckPage";
 import DeckPage from "./pages/DeckPage";
+import OAuthCallbackPage from "./pages/OAuthCallbackPage";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 export default function App() {
   return (
@@ -21,15 +23,18 @@ export default function App() {
             <div className="relative w-full max-w-[430px] overflow-x-hidden shadow-2xl">
               <Routes>
                 <Route path="/" element={<OnboardingPage />} />
-                <Route element={<Layout />}>
-                  <Route path="/home" element={<HomePage />} />
-                  <Route path="/board" element={<BoardDeckPage />} />
-                  <Route path="/myswatch" element={<MySwatchPage />} />
+                <Route path="/auth-callback" element={<OAuthCallbackPage />} />
+                <Route element={<ProtectedRoute />}>
+                  <Route element={<Layout />}>
+                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/board" element={<BoardDeckPage />} />
+                    <Route path="/myswatch" element={<MySwatchPage />} />
+                  </Route>
+                  <Route path="/brand/:id" element={<BrandNotePage />} />
+                  <Route path="/boardDeck" element={<DeckPage />} />
+                  <Route path="/brand-register" element={<BrandRegisterPage />} />
+                  <Route path="/admin" element={<AdminPage />} />
                 </Route>
-                <Route path="/brand/:id" element={<BrandNotePage />} />
-                <Route path="/boardDeck" element={<DeckPage />} />
-                <Route path="/brand-register" element={<BrandRegisterPage />} />
-                <Route path="/admin" element={<AdminPage />} />
               </Routes>
             </div>
           </div>

@@ -1,27 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MOODS } from "../constants/Moods";
-import { getKeywords } from "../api/swatching";
 import swatchDeckLogo from "../assets/swatchDeckLogo.svg";
 
 const MAX_SELECT = 3;
 
 export default function BoardDeckPage() {
   const navigate = useNavigate();
-  const [keywords, setKeywords] = useState<string[]>([...MOODS]);
   const [selected, setSelected] = useState<string[]>([]);
   const [shaking, setShaking] = useState<string | null>(null);
-
-  useEffect(() => {
-    getKeywords()
-      .then(({ data }) => {
-        const keywords = data.data ?? data;
-        if (Array.isArray(keywords) && keywords.length) {
-          setKeywords(keywords.map((k: { name: string }) => k.name));
-        }
-      })
-      .catch(() => { /* fallback to MOODS */ });
-  }, []);
 
   const toggle = (mood: string) => {
     if (selected.includes(mood)) {
@@ -44,7 +31,7 @@ export default function BoardDeckPage() {
         <h2 className="text-base font-bold text-[#1a1a1a] mb-4">무드 선택</h2>
 
         <div className="flex flex-wrap gap-2 mb-8">
-          {keywords.map((mood) => (
+          {MOODS.map((mood) => (
             <button
               key={mood}
               onClick={() => toggle(mood)}

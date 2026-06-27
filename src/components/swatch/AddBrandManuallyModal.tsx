@@ -103,8 +103,8 @@ export default function AddBrandManuallyModal({
             대표이미지
           </label>
           {imagePreview ? (
-            <div className="relative w-full h-40 rounded-xl overflow-hidden">
-              <img src={imagePreview} alt="" className="w-full h-full object-cover" />
+            <div className="relative w-full h-48 rounded-xl overflow-hidden bg-[#f3f1ec]">
+              <img src={imagePreview} alt="" className="w-full h-full object-contain" />
               <button
                 onClick={removeImage}
                 className="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1"

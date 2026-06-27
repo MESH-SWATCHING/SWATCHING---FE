@@ -13,12 +13,13 @@ export default function AddBrandToCategory({
   categoryName,
   onClose,
 }: AddBrandToCategoryProps) {
-  const { brands, savedBrands, categories, addBrandToCategory, saveBrand } = useSwatch();
+  const { brands, savedBrands, categories, addBrandToCategory } = useSwatch();
   const [selected, setSelected] = useState<string[]>([]);
 
   const currentCat = categories.find((c) => c.id === categoryId);
   const alreadyInCategory = currentCat?.brandIds ?? [];
-  const availableBrands = brands;
+  const savedBrandIds = new Set(savedBrands.map((s) => s.brandId));
+  const availableBrands = brands.filter((b) => savedBrandIds.has(b.id));
 
   const toggle = (id: string) => {
     setSelected((prev) =>
@@ -28,17 +29,7 @@ export default function AddBrandToCategory({
 
   const handleAdd = async () => {
     if (selected.length === 0) return;
-    const savedBrandIds = savedBrands.map((s) => s.brandId);
-    // 아직 저장 안 된 브랜드는 먼저 저장
-    const unsaved = selected.filter((id) => !savedBrandIds.includes(id));
-    for (const id of unsaved) {
-      await saveBrand(id, [categoryId]);
-    }
-    // 이미 저장된 브랜드는 카테고리에 추가
-    const alreadySaved = selected.filter((id) => savedBrandIds.includes(id));
-    if (alreadySaved.length > 0) {
-      await addBrandToCategory(categoryId, alreadySaved);
-    }
+    await addBrandToCategory(categoryId, selected);
     toast("브랜드가 내 스와치에 추가되었습니다.");
     onClose();
   };

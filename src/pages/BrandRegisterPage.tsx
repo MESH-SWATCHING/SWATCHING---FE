@@ -183,11 +183,11 @@ export default function BrandRegisterPage() {
         <Field label="대표 이미지 및 Brand Visuals">
           <p className="text-xs text-[#888] mb-2">대표 이미지 (1장)</p>
           {thumbnailPreview ? (
-            <div className="relative w-full h-48 rounded-xl overflow-hidden mb-3">
+            <div className="relative w-full h-56 rounded-xl overflow-hidden mb-3 bg-[#f3f1ec]">
               <img
                 src={thumbnailPreview}
                 alt="대표이미지"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
               <button
                 onClick={removeThumbnail}

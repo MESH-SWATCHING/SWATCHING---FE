@@ -27,6 +27,7 @@ export default function MySwatchPage() {
   const catScrollRef = useRef<HTMLDivElement>(null);
 
   const activeCategory = categories.find((c) => c.id === activeCatId);
+  const isAllCategory = activeCatId === "all" || activeCategory?.isDefault;
 
   const activeBrands = useMemo(() => {
     const ids = activeCategory?.brandIds ?? [];
@@ -186,12 +187,14 @@ export default function MySwatchPage() {
             {activeCategory?.name}
           </h2>
           <div className="flex gap-1.5">
-            <button
-              onClick={() => setAddingBrandCatId(activeCatId)}
-              className="text-[11px] text-[#1a1a1a] font-bold flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#f0ede8]"
-            >
-              <Plus size={11} /> 브랜드 추가
-            </button>
+            {!isAllCategory && (
+              <button
+                onClick={() => setAddingBrandCatId(activeCatId)}
+                className="text-[11px] text-[#1a1a1a] font-bold flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#f0ede8]"
+              >
+                <Plus size={11} /> 브랜드 추가
+              </button>
+            )}
             <button
               onClick={() => setShowManualAdd(true)}
               className="text-[11px] text-[#1a1a1a] font-bold flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#f0ede8]"
