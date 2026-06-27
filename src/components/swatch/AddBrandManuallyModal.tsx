@@ -3,17 +3,22 @@ import { toast } from "sonner";
 import { useSwatch } from "../../context/SwatchContext";
 
 interface AddBrandManuallyModalProps {
+  defaultCategoryId?: string;
   onClose: () => void;
 }
 
 export default function AddBrandManuallyModal({
+  defaultCategoryId,
   onClose,
 }: AddBrandManuallyModalProps) {
   const { categories, addManualBrand } = useSwatch();
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
   const [memo, setMemo] = useState("");
-  const [selectedCats, setSelectedCats] = useState<string[]>([]);
+  // 현재 카테고리가 전체(all)가 아니면 기본 선택으로 넣어줌
+  const [selectedCats, setSelectedCats] = useState<string[]>(
+    defaultCategoryId && defaultCategoryId !== "all" ? [defaultCategoryId] : [],
+  );
 
   const userCategories = categories.filter((c) => !c.isDefault);
 

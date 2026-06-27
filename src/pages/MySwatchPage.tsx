@@ -1,12 +1,14 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, FolderOpen, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { useSwatch } from "../context/SwatchContext";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
 import SavedBrandCard from "../components/swatch/SavedBrandCard";
 import DeleteCategoryModal from "../components/swatch/DeleteCategoryModal";
 import AddBrandToCategory from "../components/swatch/AddBrandToCategory";
 import AddBrandManuallyModal from "../components/swatch/AddBrandManuallyModal";
+import mySwatchLogo from "../assets/mySwatchLogo.svg";
 
 export default function MySwatchPage() {
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ export default function MySwatchPage() {
   const handleCreateCategory = () => {
     if (!newCatName.trim()) return;
     addCategory(newCatName.trim());
+    toast(`"${newCatName.trim()}" 카테고리가 생성되었습니다.`);
     setNewCatName("");
     setShowNewCatInput(false);
   };
@@ -54,7 +57,7 @@ export default function MySwatchPage() {
       <div className="max-w-md mx-auto px-5 pt-8">
         {/* 헤더 */}
         <div className="mb-5">
-          <h1 className="text-2xl font-bold text-[#1a1a1a] mb-1">My Swatch</h1>
+          <img src={mySwatchLogo} alt="My Swatch" className="h-12  -ml-4" />
         </div>
 
         {/* 카테고리 탭 */}
@@ -76,13 +79,13 @@ export default function MySwatchPage() {
                     : "bg-white text-[#1a1a1a] border border-[#e0ddd8]"
                 }`}
             >
-              {!cat.isDefault && activeCatId !== cat.id && (
+              {!cat.isDefault && (
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setDeletingCatId(cat.id);
                   }}
-                  className="absolute top-2 right-2 text-[#bbb]"
+                  className={`absolute top-2 right-2 ${activeCatId === cat.id ? "text-white/50 hover:text-white" : "text-[#bbb]"}`}
                 >
                   <Trash2 size={12} />
                 </button>
@@ -225,7 +228,10 @@ export default function MySwatchPage() {
         />
       )}
       {showManualAdd && (
-        <AddBrandManuallyModal onClose={() => setShowManualAdd(false)} />
+        <AddBrandManuallyModal
+          defaultCategoryId={activeCatId}
+          onClose={() => setShowManualAdd(false)}
+        />
       )}
     </div>
   );
