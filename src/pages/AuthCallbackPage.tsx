@@ -16,13 +16,13 @@ export default function AuthCallbackPage() {
       .then((res) => {
         const role = res.data.data?.role;
         if (role === "ADMIN") {
-          navigate("/admin", { replace: true });
+          window.location.replace("/admin");
         } else {
-          navigate("/home", { replace: true });
+          window.location.replace("/home");
         }
       })
       .catch(() => {
-        navigate("/home", { replace: true });
+        window.location.replace("/home");
       });
   }, [navigate]);
 

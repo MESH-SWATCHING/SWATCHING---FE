@@ -143,9 +143,10 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
     } catch { /* fallback */ }
   }, []);
 
-  // 초기 로드
+  // 초기 로드 (토큰 있을 때만)
   useEffect(() => {
     if (!USE_API) return;
+    if (!localStorage.getItem("accessToken")) return;
     setLoading(true);
     Promise.all([refreshBrands(), refreshCategories(), refreshSavedBrands()])
       .finally(() => setLoading(false));
