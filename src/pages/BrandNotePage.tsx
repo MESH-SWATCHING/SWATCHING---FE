@@ -165,7 +165,7 @@ export default function BrandNotePage() {
 
   return (
     <div className="min-h-screen bg-[#faf9f5] text-[#1b1c1a]">
-      <nav className="pointer-events-none fixed left-1/2 top-0 z-50 flex h-14 w-full max-w-2xl -translate-x-1/2 items-center justify-between px-5 pt-2">
+      <nav className="pointer-events-none fixed left-1/2 top-0 z-50 flex h-14 w-full max-w-[430px] -translate-x-1/2 items-center justify-between px-5 pt-2">
         <button
           type="button"
           aria-label="뒤로 가기"

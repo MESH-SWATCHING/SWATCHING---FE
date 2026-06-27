@@ -10,6 +10,7 @@ import DeleteCategoryModal from "../components/swatch/DeleteCategoryModal";
 import AddBrandToCategory from "../components/swatch/AddBrandToCategory";
 import AddBrandManuallyModal from "../components/swatch/AddBrandManuallyModal";
 import mySwatchLogo from "../assets/mySwatchLogo.svg";
+import BottomNav from "../components/common/BottomNav";
 
 export default function MySwatchPage() {
   const navigate = useNavigate();
@@ -271,6 +272,7 @@ export default function MySwatchPage() {
           onClose={() => setShowManualAdd(false)}
         />
       )}
+      {!showManualAdd && !addingBrandCatId && !deletingCatId && <BottomNav />}
     </div>
   );
 }

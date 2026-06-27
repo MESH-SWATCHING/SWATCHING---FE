@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Bookmark, Check, Plus, Search, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSwatch } from "../context/SwatchContext";
-import homeLogo from "../assets/homeLogo.svg";
+import swatchingLogo from "../assets/swatching-logo-transparent.png";
 
 const FILTERS = [
   { id: "minimal", label: "미니멀", keyword: "Minimal" },
@@ -57,15 +57,8 @@ function FilterTile({
       aria-pressed={active}
       data-filter-id={filterId}
       onClick={() => onClick(filterId)}
-      style={{
-        ...style,
-        filter: active ? 'brightness(1.08)' : 'brightness(1)',
-        boxShadow: active
-          ? 'inset 0 0 0 2.5px rgba(255,255,255,0.85), inset 0 0 0 4.5px rgba(0,0,0,0.18)'
-          : 'none',
-        transition: 'filter 0.18s, box-shadow 0.18s, transform 0.18s ease-out',
-      }}
-      className={`filter-tile relative flex flex-col items-center justify-center overflow-hidden font-display font-black ${active ? 'scale-[0.90]' : 'hover:scale-[1.02] active:scale-[0.90]'} ${className}`}
+      style={style}
+      className={`filter-tile relative flex flex-col items-center justify-center overflow-hidden font-display font-black transition-all hover:opacity-95 active:scale-[0.98] ${className}`}
     >
       {active && (
         <span className="absolute right-2.5 top-2.5 z-[2] flex size-[18px] items-center justify-center rounded-full bg-white text-black shadow-sm">
@@ -137,14 +130,14 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf9f5] text-[#1b1c1a]">
-      <header className="pointer-events-none absolute left-1/2 top-0 z-50 h-[60px] w-full -translate-x-1/2 bg-transparent">
+    <div className="min-h-screen bg-[#f7f5f2] text-[#1b1c1a]">
+      <header className="pointer-events-none absolute left-1/2 top-0 z-50 h-[72px] w-full -translate-x-1/2 bg-transparent">
         <div className="flex h-full items-center px-5">
-          <div className="relative h-14 w-[180px] overflow-hidden">
+          <div className="relative h-16 w-[220px] overflow-hidden">
             <img
-              src={homeLogo}
+              src={swatchingLogo}
               alt="Swatching"
-              className="h-full object-contain"
+              className="absolute left-1/2 top-1/2 size-[220px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
             />
           </div>
           <div className="pointer-events-auto ml-auto flex items-center gap-4">
@@ -168,7 +161,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="flex flex-col gap-3 px-4 pb-28 pt-[60px]">
+      <main className="flex flex-col gap-4 px-5 pb-28 pt-[72px]">
         <div
           className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ${
             searchOpen
@@ -191,24 +184,18 @@ export default function HomePage() {
 
         <section
           aria-label="브랜드 무드 필터"
-          className="filter-board--zigzag flex flex-col gap-1"
-          style={{
-            backgroundImage: 'linear-gradient(#e7e6e2, #e7e6e2)',
-            backgroundPosition: '5px 5px',
-            backgroundSize: 'calc(100% - 10px) calc(100% - 10px)',
-            backgroundRepeat: 'no-repeat',
-          }}
+          className="filter-board--zigzag flex flex-col gap-2 bg-transparent"
         >
-          <div className="flex h-[140px] gap-1">
-            <div className="flex w-[55%] flex-col gap-1">
+          <div className="flex h-[140px] gap-2">
+            <div className="flex w-[55%] flex-col gap-2">
               <FilterTile
                 filterId="all"
                 label="Swatching"
                 active={selectedFilters.length === 0}
                 onClick={toggleFilter}
-                className="h-1/2 w-full rounded-[24px] rounded-bl-none rounded-br-none rounded-tr-none bg-[#1b1b1b] text-[16px] text-white"
+                className="h-1/2 w-full rounded-[24px] rounded-bl-none rounded-br-none rounded-tr-none bg-[#1b1b1b] text-[18px] text-white"
               />
-              <div className="flex h-1/2 gap-1">
+              <div className="flex h-1/2 gap-2">
                 <FilterTile
                   filterId="minimal"
                   label="미니멀"
@@ -237,8 +224,8 @@ export default function HomePage() {
             />
           </div>
 
-          <div className="flex h-[140px] gap-1">
-            <div className="flex w-[55%] flex-col gap-1">
+          <div className="flex h-[140px] gap-2">
+            <div className="flex w-[55%] flex-col gap-2">
               <FilterTile
                 filterId="gorpcore"
                 label="고프코어"
@@ -250,7 +237,7 @@ export default function HomePage() {
                 }}
                 className="h-[55%] w-full rounded-[2px] bg-[#6A7C58] text-[15px] text-[#EEF0E6]"
               />
-              <div className="flex h-[45%] gap-1">
+              <div className="flex h-[45%] gap-2">
                 <FilterTile
                   filterId="classic"
                   label="클래식"
@@ -282,7 +269,7 @@ export default function HomePage() {
             />
           </div>
 
-          <div className="flex h-[65px] gap-1">
+          <div className="flex h-[65px] gap-2">
             <FilterTile
               filterId="workwear"
               label="워크웨어"
@@ -325,10 +312,10 @@ export default function HomePage() {
 
         <section className="mt-4 flex flex-col gap-4">
           <div className="flex items-baseline justify-between">
-            <h1 className="font-display text-xl font-extrabold tracking-tight">
+            <h1 className="font-display text-2xl font-extrabold tracking-tight">
               Brands
             </h1>
-            <span className="text-[11px] text-[#89888e]">
+            <span className="text-xs text-[#89888e]">
               {filteredBrands.length} brands
             </span>
           </div>
@@ -389,7 +376,7 @@ export default function HomePage() {
                       </button>
                     </div>
                     <div className="flex flex-col gap-1.5 p-3">
-                      <h2 className="truncate font-display text-base font-bold leading-tight text-[#0a0a0f]">
+                      <h2 className="truncate font-display text-lg font-bold leading-tight text-[#0a0a0f]">
                         {brand.name}
                       </h2>
                       <p className="line-clamp-2 text-[11px] leading-snug text-[#47464b]">
@@ -427,14 +414,14 @@ export default function HomePage() {
           >
             <h2
               id="register-modal-title"
-              className="mb-3 text-lg font-bold leading-tight text-[#1b1c1a]"
+              className="mb-3 text-xl font-bold leading-tight text-[#1b1c1a]"
             >
               브랜드 등록을 신청할까요?
             </h2>
             <p className="mb-8 text-sm leading-relaxed text-[#47464b]/80">
               제출한 정보는 관리자 검토 후 승인되면 사용자에게 노출됩니다.
             </p>
-            <div className="flex gap-1">
+            <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setRegisterModalOpen(false)}

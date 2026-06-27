@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MOODS } from "../constants/Moods";
 import { getKeywords } from "../api/swatching";
 import swatchDeckLogo from "../assets/swatchDeckLogo.svg";
+import BottomNav from "../components/common/BottomNav";
 
 const MAX_SELECT = 3;
 
@@ -70,6 +71,7 @@ export default function BoardDeckPage() {
           </p>
         </button>
       </div>
+      <BottomNav />
     </div>
   );
 }
