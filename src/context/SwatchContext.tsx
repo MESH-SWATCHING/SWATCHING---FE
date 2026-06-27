@@ -54,8 +54,7 @@ interface SwatchContextType {
 
 const SwatchContext = createContext<SwatchContextType | null>(null);
 
-// API 사용 여부 (서버 없으면 mock fallback)
-const USE_API = Boolean(import.meta.env.VITE_API_URL);
+const USE_API = true;
 
 export function SwatchProvider({ children }: { children: ReactNode }) {
   const [brands, setBrands] = useState<Brand[]>(MOCK_BRANDS as Brand[]);
