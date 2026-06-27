@@ -32,14 +32,8 @@ export default function AddBrandManuallyModal({
     if (!name.trim()) return;
     addManualBrand({
       name: name.trim(),
-      description: "",
-      story: "",
-      keywords: [],
-      thumbnailUrl: "",
-      visuals: [],
       instagramUrl: url.includes("instagram") ? url : undefined,
       websiteUrl: !url.includes("instagram") ? url : undefined,
-      isManual: true,
       categoryIds: selectedCats,
     });
     toast("브랜드가 내 스와치에 추가되었습니다.");
@@ -51,7 +45,7 @@ export default function AddBrandManuallyModal({
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-t-3xl w-full max-w-md px-5 pt-3 pb-10 max-h-[90vh] overflow-y-auto z-10">
+      <div className="relative bg-white rounded-t-3xl w-full max-w-md px-5 pt-3 pb-10 max-h-[90vh] overflow-y-auto scrollbar-hide z-10 animate-slide-up">
         <div className="flex justify-center pb-4">
           <div className="w-10 h-1 bg-[#ddd] rounded-full" />
         </div>

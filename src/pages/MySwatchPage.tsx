@@ -1,17 +1,20 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, FolderOpen, Trash2 } from "lucide-react";
+import { Plus, FolderOpen, Trash2, Settings, User } from "lucide-react";
 import { toast } from "sonner";
 import { useSwatch } from "../context/SwatchContext";
+import { useAuth } from "../context/AuthContext";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
 import SavedBrandCard from "../components/swatch/SavedBrandCard";
 import DeleteCategoryModal from "../components/swatch/DeleteCategoryModal";
 import AddBrandToCategory from "../components/swatch/AddBrandToCategory";
 import AddBrandManuallyModal from "../components/swatch/AddBrandManuallyModal";
 import mySwatchLogo from "../assets/mySwatchLogo.svg";
+import BottomNav from "../components/common/BottomNav";
 
 export default function MySwatchPage() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const { brands, categories, savedBrands, addCategory, deleteCategory } =
     useSwatch();
 
@@ -21,13 +24,14 @@ export default function MySwatchPage() {
   const [deletingCatId, setDeletingCatId] = useState<string | null>(null);
   const [addingBrandCatId, setAddingBrandCatId] = useState<string | null>(null);
   const [showManualAdd, setShowManualAdd] = useState(false);
+  const [showAccountPopup, setShowAccountPopup] = useState(false);
 
   const activeCategory = categories.find((c) => c.id === activeCatId);
 
   const activeBrands = useMemo(() => {
     const ids = activeCategory?.brandIds ?? [];
     return brands.filter((b) => ids.includes(b.id));
-  }, [activeCatId, brands, categories]);
+  }, [activeCategory, brands]);
 
   const { displayedData, hasMore, loaderRef } = useInfiniteScroll({
     data: activeBrands,
@@ -56,8 +60,38 @@ export default function MySwatchPage() {
     <div className="min-h-screen bg-[#f7f5f2] pb-28">
       <div className="max-w-md mx-auto px-5 pt-8">
         {/* 헤더 */}
-        <div className="mb-5">
-          <img src={mySwatchLogo} alt="My Swatch" className="h-12  -ml-4" />
+        <div className="flex items-center justify-between mb-5">
+          <img src={mySwatchLogo} alt="My Swatch" className="h-12 block" />
+          <div className="relative">
+            <button
+              onClick={() => setShowAccountPopup((prev) => !prev)}
+              className="w-9 h-9 flex items-center justify-center"
+            >
+              <Settings size={18} className="text-[#555]" />
+            </button>
+            {showAccountPopup && (
+              <div className="absolute right-0 top-11 w-64 bg-white rounded-2xl shadow-lg border border-[#e0ddd8] p-4 z-50">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#e0ddd8] flex items-center justify-center flex-shrink-0">
+                    <User size={20} className="text-[#888]" />
+                  </div>
+                  <p className="text-sm font-medium text-[#1a1a1a] truncate flex-1">
+                    {user?.nickname || "사용자"}
+                  </p>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setShowAccountPopup(false);
+                      navigate("/");
+                    }}
+                    className="text-xs text-[#e03131] border border-[#e03131] rounded-full px-3 py-1 font-medium flex-shrink-0"
+                  >
+                    로그아웃
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 카테고리 탭 */}
@@ -189,6 +223,7 @@ export default function MySwatchPage() {
                   <SavedBrandCard
                     key={brand.id}
                     brand={brand}
+                    savedBrandId={saved?.id ?? brand.id}
                     categoryId={activeCatId}
                     memo={saved?.memo ?? ""}
                     onNavigate={(id) => navigate(`/brand/${id}`)}
@@ -233,6 +268,7 @@ export default function MySwatchPage() {
           onClose={() => setShowManualAdd(false)}
         />
       )}
+      <BottomNav />
     </div>
   );
 }

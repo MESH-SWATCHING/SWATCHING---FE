@@ -5,6 +5,7 @@ import KeywordBadge from "../common/KeywordBadge";
 
 interface SavedBrandCardProps {
   brand: Brand;
+  savedBrandId: string;
   categoryId: string;
   memo: string;
   onNavigate: (brandId: string) => void;
@@ -12,6 +13,7 @@ interface SavedBrandCardProps {
 
 export default function SavedBrandCard({
   brand,
+  savedBrandId,
   categoryId,
   memo,
   onNavigate,
@@ -24,14 +26,14 @@ export default function SavedBrandCard({
 
   const handleRemove = () => {
     if (isAllCategory) {
-      unsaveBrand(brand.id);
+      unsaveBrand(savedBrandId);
     } else {
-      removeBrandFromCategory(categoryId, brand.id);
+      removeBrandFromCategory(categoryId, savedBrandId);
     }
   };
 
   const handleMemoSave = () => {
-    updateMemo(brand.id, memoValue);
+    updateMemo(savedBrandId, memoValue);
     setIsEditingMemo(false);
   };
 
