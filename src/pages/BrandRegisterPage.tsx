@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Upload, X } from "lucide-react";
-import { MOODS, MOOD_TO_EN, Mood } from "../constants/Moods";
+import { MOODS, MOOD_TO_EN, type Mood } from "../constants/Moods";
 import { submitBrand } from "../api/swatching";
 
 interface FormState {
