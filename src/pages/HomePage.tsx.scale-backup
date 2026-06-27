@@ -65,7 +65,7 @@ function FilterTile({
           : 'none',
         transition: 'filter 0.18s, box-shadow 0.18s, transform 0.18s ease-out',
       }}
-      className={`filter-tile relative flex flex-col items-center justify-center overflow-hidden font-display font-black ${active ? 'scale-[0.90]' : 'hover:scale-[1.02] active:scale-[0.90]'} ${className}`}
+      className={`filter-tile relative flex flex-col items-center justify-center overflow-hidden font-display font-black ${active ? 'scale-[0.94]' : 'hover:scale-[1.02] active:scale-[0.90]'} ${className}`}
     >
       {active && (
         <span className="absolute right-2.5 top-2.5 z-[2] flex size-[18px] items-center justify-center rounded-full bg-white text-black shadow-sm">

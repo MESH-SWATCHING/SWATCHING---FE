@@ -57,15 +57,8 @@ function FilterTile({
       aria-pressed={active}
       data-filter-id={filterId}
       onClick={() => onClick(filterId)}
-      style={{
-        ...style,
-        filter: active ? 'brightness(1.08)' : 'brightness(1)',
-        boxShadow: active
-          ? 'inset 0 0 0 2.5px rgba(255,255,255,0.85), inset 0 0 0 4.5px rgba(0,0,0,0.18)'
-          : 'none',
-        transition: 'filter 0.18s, box-shadow 0.18s, transform 0.18s ease-out',
-      }}
-      className={`filter-tile relative flex flex-col items-center justify-center overflow-hidden font-display font-black ${active ? 'scale-[0.90]' : 'hover:scale-[1.02] active:scale-[0.90]'} ${className}`}
+      style={style}
+      className={`filter-tile relative flex flex-col items-center justify-center overflow-hidden font-display font-black transition-[transform,filter] duration-100 ease-out hover:brightness-[1.12] hover:scale-[1.02] active:scale-[0.90] active:brightness-[0.72] ${className}`}
     >
       {active && (
         <span className="absolute right-2.5 top-2.5 z-[2] flex size-[18px] items-center justify-center rounded-full bg-white text-black shadow-sm">

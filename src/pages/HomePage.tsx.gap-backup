@@ -57,15 +57,8 @@ function FilterTile({
       aria-pressed={active}
       data-filter-id={filterId}
       onClick={() => onClick(filterId)}
-      style={{
-        ...style,
-        filter: active ? 'brightness(1.08)' : 'brightness(1)',
-        boxShadow: active
-          ? 'inset 0 0 0 2.5px rgba(255,255,255,0.85), inset 0 0 0 4.5px rgba(0,0,0,0.18)'
-          : 'none',
-        transition: 'filter 0.18s, box-shadow 0.18s, transform 0.18s ease-out',
-      }}
-      className={`filter-tile relative flex flex-col items-center justify-center overflow-hidden font-display font-black ${active ? 'scale-[0.90]' : 'hover:scale-[1.02] active:scale-[0.90]'} ${className}`}
+      style={style}
+      className={`filter-tile relative flex flex-col items-center justify-center overflow-hidden font-display font-black transition-all hover:opacity-95 active:scale-[0.98] ${className}`}
     >
       {active && (
         <span className="absolute right-2.5 top-2.5 z-[2] flex size-[18px] items-center justify-center rounded-full bg-white text-black shadow-sm">
@@ -191,7 +184,7 @@ export default function HomePage() {
 
         <section
           aria-label="브랜드 무드 필터"
-          className="filter-board--zigzag flex flex-col gap-1"
+          className="filter-board--zigzag flex flex-col gap-2"
           style={{
             backgroundImage: 'linear-gradient(#e7e6e2, #e7e6e2)',
             backgroundPosition: '5px 5px',
@@ -199,8 +192,8 @@ export default function HomePage() {
             backgroundRepeat: 'no-repeat',
           }}
         >
-          <div className="flex h-[140px] gap-1">
-            <div className="flex w-[55%] flex-col gap-1">
+          <div className="flex h-[140px] gap-2">
+            <div className="flex w-[55%] flex-col gap-2">
               <FilterTile
                 filterId="all"
                 label="Swatching"
@@ -208,7 +201,7 @@ export default function HomePage() {
                 onClick={toggleFilter}
                 className="h-1/2 w-full rounded-[24px] rounded-bl-none rounded-br-none rounded-tr-none bg-[#1b1b1b] text-[18px] text-white"
               />
-              <div className="flex h-1/2 gap-1">
+              <div className="flex h-1/2 gap-2">
                 <FilterTile
                   filterId="minimal"
                   label="미니멀"
@@ -237,8 +230,8 @@ export default function HomePage() {
             />
           </div>
 
-          <div className="flex h-[140px] gap-1">
-            <div className="flex w-[55%] flex-col gap-1">
+          <div className="flex h-[140px] gap-2">
+            <div className="flex w-[55%] flex-col gap-2">
               <FilterTile
                 filterId="gorpcore"
                 label="고프코어"
@@ -250,7 +243,7 @@ export default function HomePage() {
                 }}
                 className="h-[55%] w-full rounded-[2px] bg-[#6A7C58] text-[15px] text-[#EEF0E6]"
               />
-              <div className="flex h-[45%] gap-1">
+              <div className="flex h-[45%] gap-2">
                 <FilterTile
                   filterId="classic"
                   label="클래식"
@@ -282,7 +275,7 @@ export default function HomePage() {
             />
           </div>
 
-          <div className="flex h-[65px] gap-1">
+          <div className="flex h-[65px] gap-2">
             <FilterTile
               filterId="workwear"
               label="워크웨어"
@@ -434,7 +427,7 @@ export default function HomePage() {
             <p className="mb-8 text-sm leading-relaxed text-[#47464b]/80">
               제출한 정보는 관리자 검토 후 승인되면 사용자에게 노출됩니다.
             </p>
-            <div className="flex gap-1">
+            <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setRegisterModalOpen(false)}
