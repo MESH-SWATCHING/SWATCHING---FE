@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { useSwatch } from "../../context/SwatchContext";
 
@@ -15,7 +16,10 @@ export default function AddBrandManuallyModal({
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
   const [memo, setMemo] = useState("");
-  // 현재 카테고리가 전체(all)가 아니면 기본 선택으로 넣어줌
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
   const [selectedCats, setSelectedCats] = useState<string[]>(
     defaultCategoryId && defaultCategoryId !== "all" ? [defaultCategoryId] : [],
   );
@@ -28,6 +32,19 @@ export default function AddBrandManuallyModal({
     );
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
+    if (imageInputRef.current) imageInputRef.current.value = "";
+  };
+
+  const removeImage = () => {
+    setImage(null);
+    setImagePreview(null);
+  };
+
   const handleSubmit = () => {
     if (!name.trim()) return;
     addManualBrand({
@@ -35,6 +52,7 @@ export default function AddBrandManuallyModal({
       instagramUrl: url.includes("instagram") ? url : undefined,
       websiteUrl: !url.includes("instagram") ? url : undefined,
       categoryIds: selectedCats,
+      image: image ?? undefined,
     });
     toast("브랜드가 내 스와치에 추가되었습니다.");
     onClose();
@@ -76,6 +94,39 @@ export default function AddBrandManuallyModal({
             onChange={(e) => setUrl(e.target.value)}
             placeholder="URL 입력"
             className="w-full border border-[#e0ddd8] rounded-xl px-4 py-3 text-sm outline-none focus:border-[#1a1a1a] transition-colors"
+          />
+        </div>
+
+        {/* 대표이미지 업로드 */}
+        <div className="mb-4">
+          <label className="text-sm font-medium text-[#1a1a1a] mb-1.5 block">
+            대표이미지
+          </label>
+          {imagePreview ? (
+            <div className="relative w-full h-40 rounded-xl overflow-hidden">
+              <img src={imagePreview} alt="" className="w-full h-full object-cover" />
+              <button
+                onClick={removeImage}
+                className="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => imageInputRef.current?.click()}
+              className="w-full h-32 border border-dashed border-[#ccc] rounded-xl flex flex-col items-center justify-center gap-2 bg-white hover:border-[#1a1a1a] transition-colors"
+            >
+              <Upload size={20} className="text-[#bbb]" />
+              <p className="text-xs text-[#aaa]">클릭해서 이미지 업로드</p>
+            </button>
+          )}
+          <input
+            ref={imageInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageChange}
           />
         </div>
 

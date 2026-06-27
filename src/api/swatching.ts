@@ -57,5 +57,14 @@ export const removeBrandFromCategory = (categoryId: string, savedBrandId: string
   api.delete(`/api/v1/categories/${categoryId}/saved-brands/${savedBrandId}`);
 
 // ─── Manual Brand ───
-export const createManualBrand = (body: { name: string; instagramUrl?: string; websiteUrl?: string; categoryIds: string[] }) =>
-  api.post("/api/v1/manual-brands", body);
+export const createManualBrand = (body: { name: string; instagramUrl?: string; websiteUrl?: string; categoryIds: string[]; image?: File }) => {
+  const formData = new FormData();
+  formData.append("name", body.name);
+  if (body.instagramUrl) formData.append("instagramUrl", body.instagramUrl);
+  if (body.websiteUrl) formData.append("websiteUrl", body.websiteUrl);
+  body.categoryIds.forEach((id) => formData.append("categoryIds", id));
+  if (body.image) formData.append("image", body.image);
+  return api.post("/api/v1/manual-brands", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};

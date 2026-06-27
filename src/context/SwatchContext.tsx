@@ -49,7 +49,7 @@ interface SwatchContextType {
   removeBrandFromCategory: (categoryId: string, savedBrandId: string) => Promise<void>;
 
   updateMemo: (savedBrandId: string, memo: string) => Promise<void>;
-  addManualBrand: (brand: { name: string; instagramUrl?: string; websiteUrl?: string; categoryIds: string[] }) => Promise<void>;
+  addManualBrand: (brand: { name: string; instagramUrl?: string; websiteUrl?: string; categoryIds: string[]; image?: File }) => Promise<void>;
 }
 
 const SwatchContext = createContext<SwatchContextType | null>(null);
@@ -185,7 +185,7 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const addManualBrand = async (brand: { name: string; instagramUrl?: string; websiteUrl?: string; categoryIds: string[] }) => {
+  const addManualBrand = async (brand: { name: string; instagramUrl?: string; websiteUrl?: string; categoryIds: string[]; image?: File }) => {
     if (USE_API) {
       await swatchApi.createManualBrand(brand);
       await Promise.all([refreshCategories(), refreshSavedBrands()]);
@@ -196,7 +196,7 @@ export function SwatchProvider({ children }: { children: ReactNode }) {
         description: "",
         story: "",
         keywords: [],
-        thumbnailUrl: "",
+        thumbnailUrl: brand.image ? URL.createObjectURL(brand.image) : "",
         visuals: [],
         instagramUrl: brand.instagramUrl,
         websiteUrl: brand.websiteUrl,
