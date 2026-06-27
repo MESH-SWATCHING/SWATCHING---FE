@@ -60,7 +60,7 @@ export default function BoardDeckPage() {
         <button
           onClick={() => {
             const params = selected.length > 0 ? `?moods=${selected.join(",")}` : "";
-            navigate(`/deck${params}`);
+            navigate(`/boardDeck${params}`);
           }}
           className="w-full bg-[#1a1a1a] text-left rounded-2xl px-6 py-6 active:scale-[0.98] transition-transform duration-100"
         >

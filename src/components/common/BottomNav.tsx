@@ -3,7 +3,7 @@ import { Home, LayoutGrid, Bookmark } from "lucide-react";
 
 const tabs = [
   { path: "/home", icon: Home, label: "Home" },
-  { path: "/boardDeck", icon: LayoutGrid, label: "Board" },
+  { path: "/board", icon: LayoutGrid, label: "Board" },
   { path: "/swatch", icon: Bookmark, label: "Swatch" },
 ];
 
@@ -12,7 +12,7 @@ export default function BottomNav() {
   const { pathname } = useLocation();
 
   const getActive = () => {
-    if (pathname.startsWith("/boardDeck") || pathname.startsWith("/deck")) return "/boardDeck";
+    if (pathname.startsWith("/board")) return "/board";
     if (pathname.startsWith("/swatch")) return "/swatch";
     return "/home";
   };

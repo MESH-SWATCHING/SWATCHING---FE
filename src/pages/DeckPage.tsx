@@ -55,7 +55,7 @@ export default function DeckPage() {
       setCurrentIndex((i) => i + 1);
     } else {
       showToast("모든 브랜드를 확인했어요!");
-      setTimeout(() => navigate("/boardDeck"), 1000);
+      setTimeout(() => navigate("/board"), 1000);
     }
   };
 
@@ -81,7 +81,7 @@ export default function DeckPage() {
       <div className="min-h-screen bg-[#f7f5f2] flex items-center justify-center">
         <div className="text-center">
           <p className="text-sm text-[#888] mb-4">해당 무드의 브랜드가 없어요</p>
-          <button onClick={() => navigate("/boardDeck")} className="text-sm underline text-[#1a1a1a]">
+          <button onClick={() => navigate("/board")} className="text-sm underline text-[#1a1a1a]">
             돌아가기
           </button>
         </div>
@@ -95,7 +95,7 @@ export default function DeckPage() {
         {/* 헤더 */}
         <div className="flex items-center justify-between mb-6">
           <img src={swatchDeckLogo} alt="Swatch Deck" className="h-12 block" />
-          <button onClick={() => navigate("/boardDeck")} className="text-xs text-[#888]">
+          <button onClick={() => navigate("/board")} className="text-xs text-[#888]">
             초기화
           </button>
         </div>

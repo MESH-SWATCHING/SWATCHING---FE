@@ -2,7 +2,7 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Bookmark, Grid2X2, Home } from "lucide-react";
 
 function getActiveTab(pathname: string): string {
-  if (pathname.startsWith("/boardDeck") || pathname.startsWith("/deck")) return "board";
+  if (pathname.startsWith("/board")) return "board";
   if (pathname.startsWith("/swatch")) return "swatch";
   if (pathname.startsWith("/home")) return "home";
   return "";
@@ -23,7 +23,7 @@ export default function Layout() {
       >
         {[
           { id: "home", label: "Home", path: "/home", icon: Home },
-          { id: "board", label: "Board", path: "/boardDeck", icon: Grid2X2 },
+          { id: "board", label: "Board", path: "/board", icon: Grid2X2 },
           {
             id: "swatch",
             label: "My Swatch",
