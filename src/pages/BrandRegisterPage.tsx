@@ -100,7 +100,7 @@ export default function BrandRegisterPage() {
     // if (thumbnail) formData.append("thumbnail", thumbnail)
     // visuals.forEach((v) => formData.append("visuals", v))
     alert("등록 신청이 완료되었습니다.");
-    navigate("/swatch");
+    navigate("/myswatch");
   };
 
   return (

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Bookmark, Check, Plus, Search, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSwatch } from "../context/SwatchContext";
-import swatchingLogo from "../assets/swatching-logo-transparent.png";
+import homeLogo from "../assets/homeLogo.svg";
 
 const FILTERS = [
   { id: "minimal", label: "미니멀", keyword: "Minimal" },
@@ -137,14 +137,14 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f5f2] text-[#1b1c1a]">
-      <header className="pointer-events-none absolute left-1/2 top-0 z-50 h-[72px] w-full -translate-x-1/2 bg-transparent">
+    <div className="min-h-screen bg-[#faf9f5] text-[#1b1c1a]">
+      <header className="pointer-events-none absolute left-1/2 top-0 z-50 h-[60px] w-full -translate-x-1/2 bg-transparent">
         <div className="flex h-full items-center px-5">
-          <div className="relative h-16 w-[220px] overflow-hidden">
+          <div className="relative h-14 w-[180px] overflow-hidden">
             <img
-              src={swatchingLogo}
+              src={homeLogo}
               alt="Swatching"
-              className="absolute left-1/2 top-1/2 size-[220px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
+              className="h-full object-contain"
             />
           </div>
           <div className="pointer-events-auto ml-auto flex items-center gap-4">
@@ -168,7 +168,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="flex flex-col gap-4 px-5 pb-28 pt-[72px]">
+      <main className="flex flex-col gap-3 px-4 pb-28 pt-[60px]">
         <div
           className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ${
             searchOpen
@@ -206,7 +206,7 @@ export default function HomePage() {
                 label="Swatching"
                 active={selectedFilters.length === 0}
                 onClick={toggleFilter}
-                className="h-1/2 w-full rounded-[24px] rounded-bl-none rounded-br-none rounded-tr-none bg-[#1b1b1b] text-[18px] text-white"
+                className="h-1/2 w-full rounded-[24px] rounded-bl-none rounded-br-none rounded-tr-none bg-[#1b1b1b] text-[16px] text-white"
               />
               <div className="flex h-1/2 gap-1">
                 <FilterTile
@@ -325,10 +325,10 @@ export default function HomePage() {
 
         <section className="mt-4 flex flex-col gap-4">
           <div className="flex items-baseline justify-between">
-            <h1 className="font-display text-2xl font-extrabold tracking-tight">
+            <h1 className="font-display text-xl font-extrabold tracking-tight">
               Brands
             </h1>
-            <span className="text-xs text-[#89888e]">
+            <span className="text-[11px] text-[#89888e]">
               {filteredBrands.length} brands
             </span>
           </div>
@@ -389,7 +389,7 @@ export default function HomePage() {
                       </button>
                     </div>
                     <div className="flex flex-col gap-1.5 p-3">
-                      <h2 className="truncate font-display text-lg font-bold leading-tight text-[#0a0a0f]">
+                      <h2 className="truncate font-display text-base font-bold leading-tight text-[#0a0a0f]">
                         {brand.name}
                       </h2>
                       <p className="line-clamp-2 text-[11px] leading-snug text-[#47464b]">
@@ -427,7 +427,7 @@ export default function HomePage() {
           >
             <h2
               id="register-modal-title"
-              className="mb-3 text-xl font-bold leading-tight text-[#1b1c1a]"
+              className="mb-3 text-lg font-bold leading-tight text-[#1b1c1a]"
             >
               브랜드 등록을 신청할까요?
             </h2>

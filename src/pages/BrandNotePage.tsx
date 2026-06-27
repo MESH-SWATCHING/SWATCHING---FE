@@ -165,7 +165,7 @@ export default function BrandNotePage() {
 
   return (
     <div className="min-h-screen bg-[#faf9f5] text-[#1b1c1a]">
-      <nav className="pointer-events-none fixed left-1/2 top-0 z-50 flex h-14 w-full max-w-2xl -translate-x-1/2 items-center justify-between px-5 pt-2">
+      <nav className="pointer-events-none fixed left-1/2 top-0 z-50 flex h-14 w-full max-w-[430px] -translate-x-1/2 items-center justify-between px-5 pt-2">
         <button
           type="button"
           aria-label="뒤로 가기"
@@ -204,10 +204,10 @@ export default function BrandNotePage() {
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
             <div className="absolute bottom-10 left-5 right-5 text-white">
-              <h1 className="font-display text-2xl font-extrabold">
+              <h1 className="font-display text-xl font-extrabold">
                 {brand.name}
               </h1>
-              <p className="mb-3 mt-2 text-base font-bold leading-[22px] text-white/90">
+              <p className="mb-3 mt-2 text-sm font-bold leading-[20px] text-white/90">
                 {brand.description}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -225,7 +225,7 @@ export default function BrandNotePage() {
         </section>
 
         <section className="brand-note-section mt-8 px-5">
-          <h2 className="font-display text-lg font-bold tracking-wide">
+          <h2 className="font-display text-base font-bold tracking-wide">
             Brand Story
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[#47464b]">
@@ -235,7 +235,7 @@ export default function BrandNotePage() {
 
         <section className="brand-note-section mt-8">
           <div className="mb-2 flex items-end justify-between px-5">
-            <h2 className="font-display text-lg font-bold tracking-wide">
+            <h2 className="font-display text-base font-bold tracking-wide">
               Brand Visuals
             </h2>
           </div>
@@ -245,7 +245,7 @@ export default function BrandNotePage() {
             onPointerMove={moveVisualDrag}
             onPointerUp={endVisualDrag}
             onPointerCancel={endVisualDrag}
-            className="no-scrollbar flex cursor-grab snap-x snap-mandatory gap-3 overflow-x-auto px-5 select-none touch-pan-y active:cursor-grabbing"
+            className="flex cursor-grab snap-x snap-mandatory gap-3 overflow-x-auto px-5 select-none touch-pan-y active:cursor-grabbing [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           >
             {visualUrls.map((url, index) => (
               <div
@@ -290,7 +290,7 @@ export default function BrandNotePage() {
 
         {similarBrands.length > 0 && (
           <section className="brand-note-section mt-8 px-5">
-            <h2 className="mb-4 font-display text-lg font-bold tracking-wide">
+            <h2 className="mb-4 font-display text-base font-bold tracking-wide">
               비슷한 키워드의 브랜드
             </h2>
             <div className="space-y-3">
@@ -309,7 +309,7 @@ export default function BrandNotePage() {
                     />
                   </div>
                   <div className="ml-4 min-w-0 flex-1">
-                    <h3 className="truncate font-display text-base font-bold">
+                    <h3 className="truncate font-display text-sm font-bold">
                       {similarBrand.name}
                     </h3>
                     <p className="mt-1 line-clamp-1 text-xs text-[#47464b]">
@@ -351,7 +351,7 @@ export default function BrandNotePage() {
             <div className="mx-auto mb-8 h-1.5 w-12 rounded-full bg-[#e3e2df]" />
             <h2
               id="bookmark-modal-title"
-              className="font-display text-2xl font-extrabold"
+              className="font-display text-xl font-extrabold"
             >
               내 스와치에 담기
             </h2>
@@ -367,7 +367,7 @@ export default function BrandNotePage() {
                   className="h-full w-full object-cover"
                 />
               </div>
-              <span className="font-display text-lg font-bold">
+              <span className="font-display text-base font-bold">
                 {brand.name}
               </span>
             </div>
