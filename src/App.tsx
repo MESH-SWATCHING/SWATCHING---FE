@@ -10,6 +10,9 @@ import BrandRegisterPage from "./pages/BrandRegisterPage";
 import AdminPage from "./pages/AdminPage";
 import BoardDeckPage from "./pages/BoardDeckPage";
 import DeckPage from "./pages/DeckPage";
+import AuthCallbackPage from "./pages/AuthCallbackPage";
+import AdminBrandListPage from "./pages/AdminBrandListPage";
+import AdminBrandDetailPage from "./pages/AdminBrandDetailPage";
 
 export default function App() {
   return (
@@ -30,6 +33,9 @@ export default function App() {
                 <Route path="/boardDeck" element={<DeckPage />} />
                 <Route path="/brand-register" element={<BrandRegisterPage />} />
                 <Route path="/admin" element={<AdminPage />} />
+                <Route path="/auth-callback" element={<AuthCallbackPage />} />
+                <Route path="/admin/brands" element={<AdminBrandListPage />} />
+                <Route path="/admin/brands/:id" element={<AdminBrandDetailPage />} />
               </Routes>
             </div>
           </div>

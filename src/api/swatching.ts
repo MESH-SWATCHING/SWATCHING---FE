@@ -22,7 +22,7 @@ export const login = (body: { email: string; password: string }) =>
   api.post<ApiResponse<{ accessToken: string }>>("/api/v1/auth/login", body);
 
 export const getMe = () =>
-  api.get<ApiResponse<MeResponse>>("/api/v1/users/me");
+  api.get<ApiResponse<MeResponse>>("/api/v1/me");
 
 // ─── Keywords (무드) ───
 export interface KeywordDto {

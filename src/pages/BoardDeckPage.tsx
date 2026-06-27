@@ -15,12 +15,12 @@ export default function BoardDeckPage() {
   useEffect(() => {
     getKeywords()
       .then(({ data }) => {
-        const keywords = data.data ?? data;
-        if (Array.isArray(keywords) && keywords.length) {
-          setKeywords(keywords.map((k: { name: string }) => k.name));
+        const fetched = data.data ?? data;
+        if (Array.isArray(fetched) && fetched.length >= MOODS.length) {
+          setKeywords(fetched.map((k: { name: string }) => k.name));
         }
       })
-      .catch(() => { /* fallback to MOODS */ });
+      .catch(() => {});
   }, []);
 
   const toggle = (mood: string) => {
